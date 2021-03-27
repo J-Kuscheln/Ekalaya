@@ -38,4 +38,5 @@ Possible improvement:
 - UI/Design
 - Animations
 - Header transition every time load new page
+- Apply Spring Security
 - Many more
