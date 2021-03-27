@@ -1,0 +1,144 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>Home Page</title>
+		<script type="text/javascript" src="relate.js"></script>
+		<script type="text/javascript" src="hashing.js"></script>
+		<script type="text/javascript" src="redirecting.js"></script>
+	</head>
+	
+	<body>
+		<h3>New Member</h3>
+		<form  th:action="@{/members}" method="post">
+			<label for="firstName">First Name(*):</label>
+			<input type="text" name="firstName" placeholder="first name"/><br>
+			<label for="lastName">Last Name(*):</label>
+			<input type="text" name="lastName" placeholder="last name"/><br>
+			<label for="birthday">Birthday(*):</label>
+			<input type="date" name="birthday" placeholder=/><br>
+			<label for="position">Position(*):</label>
+			<input type="text" name="position" placeholder="CEO/CFO/Member/..."/><br>
+			<label for="email">Email(*):</label>
+			<input type="text" name="email" placeholder="your_email@mail.com"/><br>
+			<label for="phone">Phone:</label>
+			<input type="text" name="phone" placeholder="+49123456789"/><br>
+			<label for="password">Password(*):</label>
+			<input type="password" name="password" placeholder="password"/><br>
+			<input type="submit" value="New Member" onclick="hashCode()"/>
+		</form>
+		
+		<h3>New Project</h3>
+		<form  th:action="@{/projects}" method="post">
+			<label for="name">Project Name(*):</label>
+			<input type="text" name="name" placeholder="Project 123"/><br>
+			<label for="description">Description(*):</label>
+			<textarea name="description" placeholder="Project Description" style="margin-top:30px; width:1000px; height: 80px; vertical-align: middle;"></textarea><br>
+			<input type="submit" value="New Project" onclick="hashCode()"/>
+		</form>
+		
+		
+		<h3>Set member to project</h3>
+		<form th:action="@{/relate}" method="post">
+			<label for="memberId">Member:</label>
+			<select name="memberId" style="width:250px;">
+				<option th:unless="${members}" value="000" th:text="None"></option>
+				<option th:if="${members}" th:each="member: ${members}" th:value="${member.getId}" th:text="${member.getFirstName} + ' ' + ${member.getLastName}"></option>
+			</select>
+			<br>
+			<label for="projectId" >Project:</label>
+			<select name="projectId" style="width:250px;">
+				<option th:unless="${projects}" value="000" th:text="None"></option>
+				<option th:each="project: ${projects}" th:value="${project.getId()}" th:text="${project.getName}"></option>
+			</select>
+			<input type="text" name="toDo" style="visibility: hidden; width:0px; height:0px;"/>
+			<br><input type="submit" value="Relate as Leader" onclick="asLeader()"/><input type="submit" value="Remove as Leader" onclick="removeLeader()"/>
+			<br><input type="submit" value="Relate as Member" onclick="asMember()"/><input type="submit" value="Remove as Member" onclick="removeMember()"/>
+		</form>
+		
+		<form th:action="@{/members}">
+			<input type="submit" value="See Members"/>
+		</form>
+		<form th:action="@{/projects}">
+			<input type="submit" value="See Projects"/>
+		</form>
+		
+		<h3>See Details</h3>
+		<form onSubmit="return goToUri('memberDetails')">
+			<label for="memberIdInfo">Member:</label>
+			<select name="memberIdInfo" style="width:250px;">
+				<option th:each="member: ${members}" th:value="${member.getId()}" th:text="${member.getFirstName} + ' ' + ${member.getLastName}"></option>
+			</select>
+			<input type="submit" value="See Member Details"/>
+		</form>
+		
+		<form onSubmit="return goToUri('projectDetails')">
+			<label for="projectIdInfo">Project:</label>
+			<select name="projectIdInfo" style="width:250px;">
+				<option th:each="project: ${projects}" th:value="${project.getId()}" th:text="${project.getName}"></option>
+			</select>
+			<input type="submit" value="See Project Details"/>
+		</form>
+		
+		<h3>Delete</h3>
+		<form onSubmit="return goToUri('memberDelete')">
+			<label for="memberIdDelete">Member:</label>
+			<select name="memberIdDelete" style="width:250px;">
+				<option th:each="member: ${members}" th:value="${member.getId()}" th:text="${member.getFirstName} + ' ' + ${member.getLastName}"></option>
+			</select>
+			<input type="submit" value="Delete Member"/>
+		</form>
+		
+		<form onSubmit="return goToUri('projectDelete')">
+			<label for="projectIdDelete">Project:</label>
+			<select name="projectIdDelete" style="width:250px;">
+				<option th:each="project: ${projects}" th:value="${project.getId()}" th:text="${project.getName}"></option>
+			</select>
+			<input type="submit" value="Delete Project"/>
+		</form>
+		
+		<h3>Update</h3>
+		<label for="memberIdUpdateSelect">Member:</label>
+		<select name="memberIdUpdateSelect" style="width:250px;">
+			<option th:each="member: ${members}" th:value="${member.getId()}" th:text="${member.getFirstName} + ' ' + ${member.getLastName}"></option>
+		</select>
+		<input type="button" value="Edit" onClick="retrieveData('members')">
+		
+		
+		
+		<form id="updateMemberForm" onSubmit="return goToUri('memberUpdate')" style="display:none">
+			<input type="text" name="memberIdUpdate" style="display:none"/><br>
+			<label for="firstNameUpdate">First Name:</label>
+			<input type="text" name="firstNameUpdate" /><br>
+			<label for="lastNameUpdate">Last Name:</label>
+			<input type="text" name="lastNameUpdate" /><br>
+			<label for="photoUrlUpdate">Photo Url:</label>
+			<input type="text" name="photoUrlUpdate" /><br>
+			<label for="birthdayUpdate">Birthday:</label>
+			<input type="date" name="birthdayUpdate" /><br>
+			<label for="positionUpdate">Position:</label>
+			<input type="text" name="positionUpdate" /><br>
+			<label for="phoneUpdate">Phone:</label>
+			<input type="text" name="phoneUpdate" /><br>
+			
+			<input type="submit" value="Update Member Details"/>
+		</form>
+		<br>
+		<label for="projectIdUpdateSelect">Project:</label>
+		<select name="projectIdUpdateSelect" style="width:250px;">
+			<option th:each="project: ${projects}" th:value="${project.getId()}" th:text="${project.getName}"></option>
+		</select>
+		<input type="button" value="Edit" onClick="retrieveData('projects')">
+		
+		<form id="updateProjectForm" onSubmit="return goToUri('projectUpdate')" style="display:none">
+			<input type="text" name="projectIdUpdate" style="display:none"/><br>
+			<label for="nameUpdate">Name:</label>
+			<input type="text" name="nameUpdate" /><br>
+			<label for="statusUpdate">Status:</label>
+			<input type="text" name="statusUpdate" /><br>
+			<label for="descUpdate">Description:</label>
+			<textarea name="descUpdate" placeholder="Project Description" style="margin-top:30px; width:1000px; height: 80px; vertical-align: middle;"></textarea><br>
+			
+			<input type="submit" value="Update project Details"/>
+		</form>
+	</body>
+</html>
