@@ -13,6 +13,7 @@ Currently running features:
 - Create new project
 - Relate User as leader of a project
 - Relate User as member of a project
+- Remove project
 
 
 In progress:
