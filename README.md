@@ -14,10 +14,12 @@ Currently running features:
 - Relate User as leader of a project
 - Relate User as member of a project
 - Remove project
+- Edit profile
 
 
 In progress:
-- Edit profile
+- Remove Account (remove button + modal)
+- "Take Leadership" from project with no leader
 
 Should be added:
 - Edit Project
