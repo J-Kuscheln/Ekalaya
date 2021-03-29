@@ -13,13 +13,12 @@ export class ShowProjectsComponent implements OnInit {
   projects: Project[]
   myProjects: Project[]
   projectsContainer: Array<Project[]>
-  loggedIn:boolean
+  loggedIn:boolean = false;
   private userfirstName: string
   private userlastName: string
   private id: string
   private baseUrl = environment.apiBaseUrl
   constructor(private session:SessionService, private router:Router) { 
-    this.loggedIn = false;
     this.projects = [];
     this.myProjects = [];
     this.projectsContainer = [];
@@ -33,60 +32,67 @@ export class ShowProjectsComponent implements OnInit {
 
     this.session.myStatus$.subscribe(sessionStat=>{
       if(sessionStat!=null){
+        console.log("logged in");
         this.loggedIn = true;
         this.id = sessionStat;
-      }else this.loggedIn=false;
-
-      this.getProjects()
-      .then(data=>{
-        data.forEach(project => {
-          project.description = project.description.replaceAll('\n', "<br>");
-          if(project.projectLeaders.length>0){
-            let decided = false
-            for(let index in project.projectLeaders){
-              if(<string>project.projectLeaders[index] == this.id){
+      }else {
+        console.log("logged out");
+        this.loggedIn=false;
+      }
+    });
+    
+    this.session.checkSession();
+    
+    this.getProjects()
+    .then(data=>{
+      data.forEach(project => {
+        project.description = project.description.replaceAll('\n', "<br>");
+        if(project.projectLeaders.length>0){
+          let decided = false
+          for(let index in project.projectLeaders){
+            if(<string>project.projectLeaders[index] == this.id){
+              this.myProjects.push(project);
+              decided = true
+              break;
+            }
+          }
+          if(!decided){
+            for(let index in project.projectMembers){
+              if(<string>project.projectMembers[index] == this.id){
                 this.myProjects.push(project);
                 decided = true
                 break;
               }
             }
-            if(!decided){
-              for(let index in project.projectMembers){
-                if(<string>project.projectMembers[index] == this.id){
-                  this.myProjects.push(project);
-                  decided = true
-                  break;
-                }
-              }
-              if(!decided)this.projects.push(project);
-            }
-            
-          }else this.projects.push(project);
+            if(!decided)this.projects.push(project);
+          }
           
-        });
-        this.projects.forEach(project => {
-          for(let index in project.projectLeaders){
-            this.updateMemberName(project.projectLeaders[index]).then(str=>project.projectLeaders[index] = str);
-          }
-          for(let member in project.projectMembers){
-            this.updateMemberName(project.projectMembers[member]).then(t=>project.projectMembers[member] = t);
-          }
-        })
-
-        this.myProjects.forEach(project => {
-          for(let index in project.projectLeaders){
-            this.updateMemberName(project.projectLeaders[index]).then(str=>project.projectLeaders[index] = str);
-          }
-          for(let member in project.projectMembers){
-            this.updateMemberName(project.projectMembers[member]).then(t=>project.projectMembers[member] = t);
-          }
-        })
+        }else this.projects.push(project);
         
-        this.projectsContainer.push(this.myProjects)
-        this.projectsContainer.push(this.projects)
       });
-    
+      this.projects.forEach(project => {
+        for(let index in project.projectLeaders){
+          this.updateMemberName(project.projectLeaders[index]).then(str=>project.projectLeaders[index] = str);
+        }
+        for(let member in project.projectMembers){
+          this.updateMemberName(project.projectMembers[member]).then(t=>project.projectMembers[member] = t);
+        }
+      })
+
+      this.myProjects.forEach(project => {
+        for(let index in project.projectLeaders){
+          this.updateMemberName(project.projectLeaders[index]).then(str=>project.projectLeaders[index] = str);
+        }
+        for(let member in project.projectMembers){
+          this.updateMemberName(project.projectMembers[member]).then(t=>project.projectMembers[member] = t);
+        }
+      })
+      
+      this.projectsContainer.push(this.myProjects)
+      this.projectsContainer.push(this.projects)
     });
+    
+    
   }
 
   getProjects(){
@@ -137,6 +143,25 @@ export class ShowProjectsComponent implements OnInit {
 
   }
 
+  removeAsLeader(id:number){
+    let requestBody = `{"memberId":"`+ this.id +`",
+    "projectId":`+ id +`,
+    "toDo":"removeAsLeader"
+    }`
+
+    let url:string = this.baseUrl+"/relate";
+
+    fetch(url,
+      { method:'POST',
+        credentials:'include',
+        headers:{'Content-Type': 'application/json'},
+        body:requestBody
+      })
+    .then(()=>location.reload())
+    .catch(()=>console.log("failed to remove as leader"))
+
+  }
+
   cancel(id:number){
     document.getElementById("edit_"+id).setAttribute("style", "display:inline")
     document.getElementById("remove_"+id).setAttribute("style", "display:none")
@@ -159,8 +184,8 @@ export class ShowProjectsComponent implements OnInit {
       this.myProjects.forEach((myProject)=>{
         if (myProject.name == name) project = myProject;
       })
-      project.projectLeaders.forEach((leader)=>leader== this.userfirstName + " " + this.userlastName ? console.log("remove as leader") : this.removeAsMember(id))
-      //this.removeProject(id);
+      project.projectLeaders.forEach((leader)=>leader== this.userfirstName + " " + this.userlastName ? this.removeAsLeader(id) : this.removeAsMember(id))
+      if(project.projectLeaders.length==0) this.removeProject(id);
     })
   }
 

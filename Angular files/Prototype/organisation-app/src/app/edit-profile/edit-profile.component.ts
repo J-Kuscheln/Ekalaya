@@ -1,3 +1,4 @@
+import { Project } from './../project/Project';
 import { HashService } from '../services/hash.service';
 import { Router } from '@angular/router';
 import { SessionService } from '../services/session.service';
@@ -57,7 +58,8 @@ export class EditProfileComponent implements OnInit {
       }
       this.getMember(resp).then(respData=>this.member=respData).finally();
     })
-    .unsubscribe;
+
+    this.session.checkSession();
   }
 
   getMember(id:String){
@@ -70,11 +72,10 @@ export class EditProfileComponent implements OnInit {
     let status = document.querySelector("div #status");
     if(this.isValidInput(this.phone)){
       this.isAuthorized()
-      .then(resp=>resp.json())
       .then(data=>{
-        this.oldPassword.nativeElement.className="form-control";
         if(data){
           //update new email and new password
+          this.oldPassword.nativeElement.className="form-control is-valid";
           let url = this.baseUrl + "/members/" + this.member.id;
           let newPass:string = this.newPassword.nativeElement.value=="" ? 
             this.hashService.hash(this.email.nativeElement.value, this.oldPassword.nativeElement.value) : this.hashService.hash(this.email.nativeElement.value, this.newPassword.nativeElement.value);
@@ -94,6 +95,7 @@ export class EditProfileComponent implements OnInit {
             //status 400: Bad_Request --> format failure
             console.log("update status: ", data2.status);
             if(data2.status==200) {
+              this.session.myUserName(this.firstName.nativeElement.value,this.lastName.nativeElement.value);
               status.textContent = "Changes saved!";
               status.setAttribute("style", "color:green");
             }else if(data2.status==404){
@@ -122,6 +124,97 @@ export class EditProfileComponent implements OnInit {
     }
   }
 
+  deleteMember(){
+    if(this.isValidInput(this.phone)){
+      this.isAuthorized()
+      .then(resp=>{
+        if(resp){
+          this.oldPassword.nativeElement.className="form-control is-valid";
+          console.log("delete Member...");
+          //remove relation as Leader
+           this.removeAsLeader()
+           .then(()=>{
+              //remove relation as member
+              this.removeAsMember()
+              .then(()=>{
+                //remove Account
+                let url = this.baseUrl + "/members/" + this.member.id;
+                fetch(url,{method:'delete',credentials:'include'})
+                .then(()=>{
+                  //logout (close session)
+                  let url = this.baseUrl + "/auth/logout";
+                  fetch(url,{credentials:'include'})
+                  .finally(()=>{
+                    this.router.navigate(["/"]);
+                    this.session.myStatus(null);
+                    location.reload();
+                  });
+                });
+              });
+            });
+        }else{
+          this.oldPassword.nativeElement.className="form-control is-invalid";
+          document.querySelector("#oldPassword-invalid-feedback").textContent = "Wrong password!"
+        }
+      });
+    }
+  }
+
+  getProject(id:String){
+    let url = this.baseUrl + "/projects/" + id;
+    return fetch(url,{method:'get', credentials:'include'}).then(resp=>resp.json());
+  }
+
+  removeProject(id:String){
+    let url = this.baseUrl + "/projects/" + id;
+    return fetch(url,{method:'delete', credentials:'include'}).then(resp=>resp.json());
+  }
+
+  async removeAsLeader(){
+    let responses = [];
+    for(let projectIndex in this.member.leadedProjects){
+      let projectId = this.member.leadedProjects[projectIndex];
+      let memberId = this.member.id;
+      let toDo = "removeAsLeader";
+      let url = this.baseUrl + "/relate";
+      let body:any = {
+        "memberId":memberId,
+        "projectId":projectId,
+        "toDo":toDo
+      }
+
+      await fetch(url,{method:'post',credentials:'include',headers:{'Content-type':'application/json'}, body:JSON.stringify(body)})
+      .then(resp=>{
+        responses.push(resp.json())
+        this.getProject(projectId).then(resp=>{
+          //remove project entirely when no leader assigned to it
+          let project:Project = resp;
+          if(project.projectLeaders.length==0) this.removeProject(projectId);
+        });
+      });
+    }
+    return responses;
+  }
+
+  async removeAsMember(){
+    let responses = [];
+    for(let projectIndex in this.member.memberProjects){
+      let projectId = this.member.memberProjects[projectIndex];
+      let memberId = this.member.id;
+      let toDo = "removeAsMember";
+      let url = this.baseUrl + "/relate";
+      let body:any = {
+        "memberId":memberId,
+        "projectId":projectId,
+        "toDo":toDo
+      }
+
+      await fetch(url,{method:'post',credentials:'include',headers:{'Content-type':'application/json'}, body:JSON.stringify(body)})
+      .then(resp=>responses.push(resp.json()));
+    }
+    return responses;
+  }
+
   isAuthorized(){
     //fetch to checkAuth
     let url = environment.apiBaseUrl + "/auth/checkAuth"
@@ -132,7 +225,7 @@ export class EditProfileComponent implements OnInit {
     let body = `{"email":"` + oldEmail + `", "password":"` + hashValue + `"}`
 
     return fetch(url,{method:'post', credentials:'include', headers:{'Content-Type': 'application/json'}, body:body})
-    .then(resp=>resp);
+    .then(resp=>resp.json());
   }
 
   isValidInput(element:ElementRef):boolean{
@@ -174,5 +267,10 @@ export class EditProfileComponent implements OnInit {
     return true;
   }
 
-
+  formUpdateMember(){
+    document.querySelector(".edit-profile").setAttribute("onsubmit", "document.querySelector('button#submitClick').click(); return false;")
+  }
+  formDeleteMember(){
+    document.querySelector(".edit-profile").setAttribute("onsubmit", "document.querySelector('button#deleteClick').click(); return false;")
+  }
 }

@@ -1,3 +1,4 @@
+import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
@@ -12,7 +13,7 @@ export class SessionService {
   private sessionStat = new Subject<string>();
   private sessionUserFirstName = new Subject<string>();
   private sessionUserLastName = new Subject<string>();
-
+  private baseUrl = environment.apiBaseUrl;
   constructor() {
       this.myStatus$ = this.sessionStat.asObservable();
       this.myUserFirstName$ = this.sessionUserFirstName.asObservable();
@@ -26,5 +27,11 @@ export class SessionService {
   myUserName(firstName:string, lastName:string){
     this.sessionUserFirstName.next(firstName);
     this.sessionUserLastName.next(lastName);
+  }
+
+  async checkSession(){
+    console.log("checking session....")
+    return fetch(this.baseUrl+"/auth/session",{credentials:'include'}).then(response=>response.json())
+    .then(data=>this.myStatus(data["USER_ID"]));
   }
 }

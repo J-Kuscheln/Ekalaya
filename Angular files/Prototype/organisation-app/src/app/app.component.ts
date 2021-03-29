@@ -40,6 +40,11 @@ export class AppComponent implements OnInit{
     this.session.myUserLastName$
     .subscribe(resp=>this.userLastName=resp)
     .unsubscribe;
+    this.session.myStatus$
+    .subscribe(resp=>{
+      if(resp==null) this.loggedIn(false);
+      else this.loggedIn(true);
+    })
   }
   async checkSession(){
     console.log("checking session....")
@@ -80,7 +85,7 @@ export class AppComponent implements OnInit{
         .then(response=>response).then(data=>{
           if(data) {
             this.loggedIn(false)
-            window.location.reload()
+            location.reload();
           }
           else console.log("something is wrong");
         })

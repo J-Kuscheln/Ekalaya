@@ -12,7 +12,7 @@
     <div class="row justify-content-center mt-5">
         <div class="col col-1"></div>
         <div class="col col-10">
-            <form onsubmit="document.querySelector('button#submitClick').click(); return false">
+            <form class="edit-profile" onsubmit="return false">
                 <div class="mb-3">
                     <label for="firstName" class="form-control-label">First Name</label>
                     <input type="text" class="form-control" id="firstName" value="{{member.firstName}}" #firstName required>
@@ -50,9 +50,12 @@
                     <input type="date" class="form-control" id="birthday" value="{{member.birthday}}" #birthday>
                 </div>
 
-                <button class="btn btn-primary" type="submit" >Save</button>
+                <button class="btn btn-primary" type="submit" (click)="formUpdateMember()">Save</button>
+                <button class="btn btn-danger" type="submit" style="margin-left: 3%;" (click)="formDeleteMember()">Remove Account</button>
             </form>
                 <button id="submitClick" (click)="updateMember()" style="display: none;"></button>
+                <button id="deleteClick" (click)="deleteMember()" style="display: none;"></button>
+                
             <div><p id="status"></p></div>
         </div>
         <div class="col col-1"></div>

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.prototype.organisation.member.Member;
 import com.prototype.organisation.member.MemberService;
@@ -18,7 +19,7 @@ import com.prototype.organisation.project.Project;
 import com.prototype.organisation.project.ProjectService;
 
 @CrossOrigin(origins = {"http://192.168.178.31:4200","http://localhost:4200"})
-@Controller
+@RestController
 public class GeneralController {
 	@Autowired
 	ProjectService projectService;
@@ -38,7 +39,7 @@ public class GeneralController {
 	
 	@RequestMapping(method = RequestMethod.POST,value = "/relate")
 	//@RequestParam(name="memberId") String memberId, @RequestParam(name="projectId") long projectId, @RequestParam(name="toDo") String toDo
-	public String relate(@RequestBody RelateObjects body) {
+	public HttpStatus relate(@RequestBody RelateObjects body) {
 		try{
 			Member member = memberService.getMember(body.getMemberId());
 			Project project = projectService.getProject(body.getProjectId());
@@ -47,8 +48,7 @@ public class GeneralController {
 				case("asLeader"):
 					for(Member leader : project.getProjectLeaders()) {
 						if (leader.getId().equals(body.getMemberId())) {
-							System.out.println(HttpStatus.IM_USED);
-							return "redirect:/projects";
+							return HttpStatus.IM_USED;
 						}
 					}
 					member.addLeadedProjects(project);
@@ -58,8 +58,7 @@ public class GeneralController {
 				case("asMember"):
 					for(Member leader : project.getProjectMembers()) {
 						if (leader.getId().equals(body.getMemberId())) {
-							System.out.println(HttpStatus.IM_USED);
-							return "redirect:/";
+							return HttpStatus.IM_USED;
 						}
 					}
 					member.addMemberProjects(project);
@@ -86,13 +85,15 @@ public class GeneralController {
 					}
 					
 			}
-			System.out.println(memberService.updateMember(member));
-			System.out.println(projectService.updateProject(project));
-			return "redirect:/";
+			memberService.updateMember(member);
+			projectService.updateProject(project);
+
+			return HttpStatus.OK;
 		}
 		catch(Exception e) {
-			System.out.println(HttpStatus.BAD_REQUEST);
-			return "redirect:/";
+			System.out.println("go Here");
+			e.printStackTrace();
+			return HttpStatus.BAD_REQUEST;
 		}
 	}
 	

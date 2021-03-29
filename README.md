@@ -16,14 +16,18 @@ Currently running features:
 - Relate User as member of a project
 - Remove project
 - Edit profile
+- Remove Account
 
 
 In progress:
-- Remove Account (remove button + modal + remove relation)
+- Remove Account (modal)
 - "Take Leadership" from project with no leader
+- Add new entity to contain projects with no leader
+- Make scheduler to remove projects with no leader
 
 Should be added:
 - Edit Project
+- Project details
 - relate Project with Milestones
 - Messages section
   - Ability for leader of project to give tasks to member(s)

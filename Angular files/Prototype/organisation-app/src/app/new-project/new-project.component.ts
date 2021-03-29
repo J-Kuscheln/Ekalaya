@@ -33,6 +33,8 @@ export class NewProjectComponent implements OnInit {
 
       if (this.loggedIn==false) this.router.navigate(["/"])
     });
+
+    this.session.checkSession();
   }
 
   create(){
