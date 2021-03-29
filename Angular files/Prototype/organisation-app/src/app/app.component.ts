@@ -1,6 +1,6 @@
 import { environment } from './../environments/environment';
 import { Router } from '@angular/router';
-import { SessionService } from './service/session.service';
+import { SessionService } from './services/session.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 @Component({

@@ -1,6 +1,7 @@
+import { HashService } from '../services/hash.service';
 import { environment } from './../../environments/environment';
 import { Router, RouterModule } from '@angular/router';
-import { SessionService } from './../service/session.service';
+import { SessionService } from '../services/session.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 @Component({
@@ -16,7 +17,8 @@ export class LoginPageComponent implements OnInit {
   @ViewChild("password")
   password?: ElementRef
   constructor(private session: SessionService, 
-    private router:Router
+    private router:Router,
+    private hashService:HashService
     ) {
   }
 
@@ -33,6 +35,9 @@ export class LoginPageComponent implements OnInit {
     console.log("hashing!")
     let email:string = this.email?.nativeElement.value;
     let password:string = this.password?.nativeElement.value;
+
+    let hash = this.hashService.hash(email,password);
+    /*
     let str =  email + password;
     var hash = 0, i, chr;
     for (i = 0; i < str.length; i++) {
@@ -40,6 +45,8 @@ export class LoginPageComponent implements OnInit {
       hash  = ((hash << 5) - hash) + chr;
       hash |= 0; // Convert to 32bit integer
     }
+    */
+
     /*
     console.log("email: " + email)
     console.log("pass: " + password)

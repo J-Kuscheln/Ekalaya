@@ -1,5 +1,6 @@
+import { HashService } from '../services/hash.service';
 import { Router } from '@angular/router';
-import { SessionService } from './../service/session.service';
+import { SessionService } from '../services/session.service';
 import { Member } from './../member/Member';
 import { environment } from './../../environments/environment';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
@@ -43,8 +44,8 @@ export class EditProfileComponent implements OnInit {
   newPassword:ElementRef
 
 
-  baseUrl = environment.apiBaseUrl;
-  constructor(private session:SessionService, private router:Router) { }
+  private baseUrl = environment.apiBaseUrl;
+  constructor(private session:SessionService, private router:Router, private hashService:HashService ) { }
 
   ngOnInit(): void {
     this.session.myStatus$
@@ -68,27 +69,57 @@ export class EditProfileComponent implements OnInit {
     console.log("update member...")
     let status = document.querySelector("div #status");
     if(this.isValidInput(this.phone)){
-      if(this.isAuthorized()){
-        //update new email and new password
-        status.textContent = "Changes saved!";
-        status.setAttribute("style", "color:green");
-        return;
-      }
+      this.isAuthorized()
+      .then(resp=>resp.json())
+      .then(data=>{
+        this.oldPassword.nativeElement.className="form-control";
+        if(data){
+          //update new email and new password
+          let url = this.baseUrl + "/members/" + this.member.id;
+          let newPass:string = this.newPassword.nativeElement.value=="" ? 
+            this.hashService.hash(this.email.nativeElement.value, this.oldPassword.nativeElement.value) : this.hashService.hash(this.email.nativeElement.value, this.newPassword.nativeElement.value);
+          
+          let headerContent:any = {'Content-Type': 'application/json', 'newP': + newPass};
+          let body:any = {
+            "firstName":this.firstName.nativeElement.value,
+            "lastName":this.lastName.nativeElement.value,
+            "email":this.email.nativeElement.value,
+            "phone":this.phone.nativeElement.value,
+            "birthday":this.birthday.nativeElement.value,
+          }
 
-      this.oldPassword.nativeElement.className="form-control is-invalid";
-      document.querySelector("#oldPassword-invalid-feedback").textContent = "Wrong password!"
-    }
-  }
+          fetch(url,{method:'put', credentials:'include', headers:headerContent, body:JSON.stringify(body)})
+          .then(resp2=>resp2)
+          .then(data2=>{
+            //status 400: Bad_Request --> format failure
+            console.log("update status: ", data2.status);
+            if(data2.status==200) {
+              status.textContent = "Changes saved!";
+              status.setAttribute("style", "color:green");
+            }else if(data2.status==404){
+              status.textContent = "Member not found!";
+              status.setAttribute("style", "color:red");
+            }else if(data2.status==226){
+              this.email.nativeElement.className="form-control is-invalid"
+              document.querySelector("#email-invalid-feedback").textContent = "Email already used!"
+            }
+            else{
+              status.textContent = "Network/Server failure!";
+              status.setAttribute("style", "color:red");
+            }
+          });
+        }
 
-  hash(email:string, password:string):string{
-    let str =  email + password;
-    var hash = 0, i, chr;
-    for (i = 0; i < str.length; i++) {
-      chr   = str.charCodeAt(i);
-      hash  = ((hash << 5) - hash) + chr;
-      hash |= 0; // Convert to 32bit integer
+        else{
+          this.oldPassword.nativeElement.className="form-control is-invalid";
+          document.querySelector("#oldPassword-invalid-feedback").textContent = "Wrong password!"
+        }
+        
+      });
+      
+
+      
     }
-    return hash.toString();
   }
 
   isAuthorized(){
@@ -96,7 +127,7 @@ export class EditProfileComponent implements OnInit {
     let url = environment.apiBaseUrl + "/auth/checkAuth"
     let oldEmail = this.member.email;
     let oldPassword = this.oldPassword.nativeElement.value;
-    let hashValue = this.hash(<string> oldEmail,oldPassword);
+    let hashValue = this.hashService.hash(<string> oldEmail,oldPassword);
 
     let body = `{"email":"` + oldEmail + `", "password":"` + hashValue + `"}`
 

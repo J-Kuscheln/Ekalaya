@@ -1,10 +1,13 @@
 package com.prototype.organisation.member;
 
 
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -67,23 +70,37 @@ public class MemberController {
 	
 	//update member
 	@PutMapping("/{id}")
-	public HttpStatus updateMember(@RequestBody Member memberBody, @PathVariable String id) {
+	public HttpStatus updateMember(@RequestBody Member memberBody, @PathVariable String id, @RequestHeader("newP") String newPass, 
+			HttpServletResponse response) {
 		try {
+			HttpStatus status;
 			UUID uuid = UUID.fromString(id);
 
-
+			
 			Member memberOld = service.getMember(uuid);
+			Member otherMember = service.getMemberByEmail(memberBody.getEmail());
+			if(otherMember!=null && !otherMember.getEmail().equals(memberOld.getEmail())) {
+				status = HttpStatus.IM_USED;
+				response.setStatus(status.value());
+				return status;
+			}
 			memberBody.setId(uuid);
 			memberBody.setJoinDate(memberOld.getJoinDate());
 			memberBody.setModifiedDate(memberOld.getModifiedDate());
 			memberBody.setLeadedProjects(memberOld.getLeadedProjects());
 			memberBody.setMemberProjects(memberOld.getMemberProjects());
-			memberBody.setEmail(memberOld.getEmail());
-			return service.updateMember(memberBody);
+			if(!newPass.equals("0")) memberBody.setPassword(newPass);
+			else memberBody.setPassword(memberOld.getPassword());
+			
+			status = service.updateMember(memberBody);
+			//status = HttpStatus.OK;
+			response.setStatus(status.value());
+			return status;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return HttpStatus.BAD_REQUEST;
+			HttpStatus status = HttpStatus.BAD_REQUEST;
+			response.setStatus(status.value());
+			return status;
 		}
 	}
 	

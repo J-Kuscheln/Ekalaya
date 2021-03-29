@@ -1,4 +1,4 @@
-import { SessionService } from './service/session.service';
+import { SessionService } from './services/session.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 

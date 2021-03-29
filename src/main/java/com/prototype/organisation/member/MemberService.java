@@ -52,4 +52,8 @@ public class MemberService {
 		memberRepo.deleteById(id);
 		return HttpStatus.OK;
 	}
+
+	public Member getMemberByEmail(String email) {
+		return memberRepo.findByEmail(email);
+	}
 }

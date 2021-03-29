@@ -1,5 +1,6 @@
+import { HashService } from '../services/hash.service';
 import { environment } from './../../environments/environment';
-import { SessionService } from './../service/session.service';
+import { SessionService } from '../services/session.service';
 import { Router } from '@angular/router';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
@@ -36,7 +37,7 @@ export class SignupComponent implements OnInit {
   @ViewChild("passwordValidator")
   passValidator:ElementRef
   private baseUrl = environment.apiBaseUrl
-  constructor(private router: Router, private session:SessionService) {
+  constructor(private router: Router, private session:SessionService, private hashService:HashService) {
     
    }
 
@@ -74,12 +75,7 @@ export class SignupComponent implements OnInit {
     let email:string = this.email.nativeElement.value;
     let password:string = this.pass.nativeElement.value;
     let str =  email + password;
-    var hash = 0, i, chr;
-    for (i = 0; i < str.length; i++) {
-      chr   = str.charCodeAt(i);
-      hash  = ((hash << 5) - hash) + chr;
-      hash |= 0; // Convert to 32bit integer
-    }
+    var hash = this.hashService.hash(email,password);
     return hash.toString();
   }
 
@@ -145,7 +141,7 @@ export class SignupComponent implements OnInit {
       let isNumeric = (code>=48 && code<=57);
       let isPlusOrZero = ((code==43 || code==48));
       
-      if ((i!=0 && !isNumeric) || (i==0 && !isPlusOrZero)) // numeric (0-9
+      if ((i!=0 && !isNumeric) || (i==0 && !isPlusOrZero))
       { // lower alpha (a-z)
         element.nativeElement.className="form-control is-invalid";
         return false;

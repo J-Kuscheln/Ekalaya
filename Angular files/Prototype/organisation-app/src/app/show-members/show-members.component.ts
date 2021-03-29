@@ -1,5 +1,5 @@
 import { environment } from './../../environments/environment';
-import { SessionService } from './../service/session.service';
+import { SessionService } from '../services/session.service';
 import { Member } from './../member/Member';
 import { Component, OnInit } from '@angular/core';
 
