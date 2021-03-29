@@ -3,8 +3,9 @@ Web App for Ekalaya Organisation
 
 by: Rozaan Wiryanto Handoyo
 
-date: 27/03/2021
+first commit date: 27/03/2021
 This is the "late" first commit (Sorry for that). 
+
 The current condition will be described in details below.
 
 Currently running features:
