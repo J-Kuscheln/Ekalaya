@@ -19,7 +19,7 @@ Currently running features:
 
 
 In progress:
-- Remove Account (remove button + modal)
+- Remove Account (remove button + modal + remove relation)
 - "Take Leadership" from project with no leader
 
 Should be added:
