@@ -21,13 +21,14 @@ Currently running features:
 
 In progress:
 - Remove Account (modal)
-- "Take Leadership" from project with no leader
-- Add new entity to contain projects with no leader
-- Make scheduler to remove projects with no leader
+
 
 Should be added:
 - Edit Project
 - Project details
+- "Take Leadership" from project with no leader
+- Add new entity to contain projects with no leader
+- Make scheduler to remove projects with no leader
 - relate Project with Milestones
 - Messages section
   - Ability for leader of project to give tasks to member(s)
