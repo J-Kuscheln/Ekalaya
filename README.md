@@ -20,12 +20,13 @@ Currently running features:
 
 
 In progress:
-- Remove Account (modal)
-
-
-Should be added:
 - Edit Project
 - Project details
+  -Details Page
+  -Member can only read
+  -Leader Automatically to Edit Page
+
+Should be added:
 - "Take Leadership" from project with no leader
 - Add new entity to contain projects with no leader
 - Make scheduler to remove projects with no leader
