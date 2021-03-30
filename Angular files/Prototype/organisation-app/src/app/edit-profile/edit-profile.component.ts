@@ -153,6 +153,7 @@ export class EditProfileComponent implements OnInit {
               });
             });
         }else{
+          document.getElementsByName("cancelBtn")[0].click();
           this.oldPassword.nativeElement.className="form-control is-invalid";
           document.querySelector("#oldPassword-invalid-feedback").textContent = "Wrong password!"
         }

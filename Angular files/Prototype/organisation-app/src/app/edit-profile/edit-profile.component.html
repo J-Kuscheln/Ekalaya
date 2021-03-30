@@ -54,10 +54,30 @@
                 <button class="btn btn-danger" type="submit" style="margin-left: 3%;" (click)="formDeleteMember()">Remove Account</button>
             </form>
                 <button id="submitClick" (click)="updateMember()" style="display: none;"></button>
-                <button id="deleteClick" (click)="deleteMember()" style="display: none;"></button>
+                <button id="deleteClick" data-bs-toggle="modal" data-bs-target="#removeModal" style="display: none;"></button>
                 
             <div><p id="status"></p></div>
         </div>
         <div class="col col-1"></div>
+    </div>
+</div>
+
+<!--MODAL-->
+
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Remove Account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        Are you sure want to remove the Account?
+        </div>
+        <div class="modal-footer">
+        <button name="cancelBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="removeBtn" class="btn btn-danger" (click)="deleteMember()">Remove Account</button> <!--(click)="removeProject(project.id)"-->
+        </div>
+    </div>
     </div>
 </div>
