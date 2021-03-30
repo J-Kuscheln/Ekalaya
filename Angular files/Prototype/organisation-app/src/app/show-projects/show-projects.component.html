@@ -62,7 +62,7 @@
                     </p>
                     
                     <ul style="list-style-type:none;">
-                        <li *ngFor="let leader of project.projectLeaders"> {{leader}} </li>
+                        <li *ngFor="let leader of project.projectLeaders"> <div id="{{project.id.toString() + leader}}">loading...</div> </li>
                     </ul>
                 </div>
 
@@ -73,7 +73,7 @@
                     </p>
                     
                     <ul style="list-style-type:none;">
-                        <li *ngFor="let member of project.projectMembers"> {{member}} </li>
+                        <li *ngFor="let member of project.projectMembers"> <div id="{{project.id.toString() + member}}">loading...</div> </li>
                     </ul>
                 </div>
 
@@ -82,15 +82,16 @@
                         Edit
                     </button>
                     
-                    <button class="btn btn-primary" id="editDetails_{{project.id}}" type="button" aria-haspopup="true" aria-expanded="false" *ngIf="i==0 " (click)="details(project.id)">
+                    <button class="btn btn-primary" id="editDetails_{{project.id}}" type="button" aria-haspopup="true" aria-expanded="false" *ngIf="i==0 && project.projectLeaders[0]==(userFirstName + ' ' + userLastName)" (click)="details(project.id)">
                         Edit details
                     </button>
 
                     <button class="btn btn-danger" id="remove_{{project.id}}" type="button" 
                     aria-haspopup="true" aria-expanded="false" 
                     data-bs-toggle="modal" data-bs-target="#removeModal" (click)="modifyModal(project.id,project.name)"
-                    *ngIf="i==0 ">
-                        Remove
+                    *ngIf="i==0">
+                        <div *ngIf="project.projectLeaders[0]==(userFirstName + ' ' + userLastName)">Remove Project</div>
+                        <div *ngIf="project.projectLeaders[0]!=(userFirstName + ' ' + userLastName)">Resign</div>
                     </button>
                     
                     <button class="btn btn-primary" id="done_{{project.id}}" type="button" aria-haspopup="true" aria-expanded="false" *ngIf="i==0 " (click)="cancel(project.id)">

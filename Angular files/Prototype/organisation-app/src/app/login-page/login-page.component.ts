@@ -28,6 +28,8 @@ export class LoginPageComponent implements OnInit {
       if(sessionStat!=null && this.router.url == "/login"){
         this.router.navigate(["/"]);
       }
+      
+      if(this.router.url=="/login") document.getElementById('main-container').setAttribute("style", "margin-top:10%");
     });
   }
 

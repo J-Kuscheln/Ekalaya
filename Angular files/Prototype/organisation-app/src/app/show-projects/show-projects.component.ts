@@ -14,8 +14,8 @@ export class ShowProjectsComponent implements OnInit {
   myProjects: Project[]
   projectsContainer: Array<Project[]>
   loggedIn:boolean = false;
-  private userfirstName: string
-  private userlastName: string
+  public userFirstName: string
+  public userLastName: string
   private id: string
   private baseUrl = environment.apiBaseUrl
   constructor(private session:SessionService, private router:Router) { 
@@ -23,12 +23,12 @@ export class ShowProjectsComponent implements OnInit {
     this.myProjects = [];
     this.projectsContainer = [];
     this.id = null;
-    this.userfirstName = null;
+    this.userFirstName = null;
   }
 
   ngOnInit(): void {
-    this.session.myUserFirstName$.subscribe((sessionName)=>this.userfirstName = sessionName)
-    this.session.myUserLastName$.subscribe((sessionName)=>this.userlastName = sessionName)
+    this.session.myUserFirstName$.subscribe((sessionName)=>this.userFirstName = sessionName)
+    this.session.myUserLastName$.subscribe((sessionName)=>this.userLastName = sessionName)
 
     this.session.myStatus$.subscribe(sessionStat=>{
       if(sessionStat!=null){
@@ -72,19 +72,19 @@ export class ShowProjectsComponent implements OnInit {
       });
       this.projects.forEach(project => {
         for(let index in project.projectLeaders){
-          this.updateMemberName(project.projectLeaders[index]).then(str=>project.projectLeaders[index] = str);
+          this.updateMemberName(project.projectLeaders[index]).then(str=>this.updateMemberDOM(<number> project.id, <string>project.projectLeaders[index], str))
         }
         for(let member in project.projectMembers){
-          this.updateMemberName(project.projectMembers[member]).then(t=>project.projectMembers[member] = t);
+          this.updateMemberName(project.projectMembers[member]).then(t=>this.updateMemberDOM(<number> project.id, <string>project.projectMembers[member], t))
         }
       })
 
       this.myProjects.forEach(project => {
         for(let index in project.projectLeaders){
-          this.updateMemberName(project.projectLeaders[index]).then(str=>project.projectLeaders[index] = str);
+          this.updateMemberName(project.projectLeaders[index]).then(str=>this.updateMemberDOM(<number> project.id, <string>project.projectLeaders[index], str))
         }
         for(let member in project.projectMembers){
-          this.updateMemberName(project.projectMembers[member]).then(t=>project.projectMembers[member] = t);
+          this.updateMemberName(project.projectMembers[member]).then(t=>this.updateMemberDOM(<number> project.id, <string>project.projectMembers[member], t))
         }
       })
       
@@ -93,6 +93,13 @@ export class ShowProjectsComponent implements OnInit {
     });
     
     
+  }
+
+  updateMemberDOM(projectId:number, memberId:string, response:string){
+    console.log(projectId + memberId);
+    let component = document.getElementById(projectId + memberId);
+    component.textContent = response;
+    component.setAttribute("id", response);
   }
 
   getProjects(){
@@ -111,10 +118,14 @@ export class ShowProjectsComponent implements OnInit {
   }
 
   edit(id:number){
-    document.getElementById("edit_"+id).setAttribute("style", "display:none")
-    document.getElementById("remove_"+id).setAttribute("style", "display:inline")
-    document.getElementById("editDetails_"+id).setAttribute("style", "display:inline")
-    document.getElementById("done_"+id).setAttribute("style", "display:inline")
+    document.getElementById("edit_"+id).setAttribute("style", "display:none");
+    document.getElementById("remove_"+id).setAttribute("style", "display:inline");
+    document.getElementById("done_"+id).setAttribute("style", "display:inline");
+    try{
+      document.getElementById("editDetails_"+id).setAttribute("style", "display:inline");
+    }catch(e){
+      //means our member is not the leader, and editDetails doesn't exist.. do nothing!
+    }
   }
 
   removeProject(id:number){
@@ -165,12 +176,17 @@ export class ShowProjectsComponent implements OnInit {
   cancel(id:number){
     document.getElementById("edit_"+id).setAttribute("style", "display:inline")
     document.getElementById("remove_"+id).setAttribute("style", "display:none")
-    document.getElementById("editDetails_"+id).setAttribute("style", "display:none")
     document.getElementById("done_"+id).setAttribute("style", "display:none")
+    try{
+      document.getElementById("editDetails_"+id).setAttribute("style", "display:none")
+    }catch(e){
+      //means our member is not the leader, and editDetails doesn't exist.. do nothing!
+    }
   }
 
   details(id:number){
     console.log("details id: ",id)
+    this.router.navigate(['/edit-project/'+id]);
   }
 
   modifyModal(id:number, name:String){
@@ -184,7 +200,7 @@ export class ShowProjectsComponent implements OnInit {
       this.myProjects.forEach((myProject)=>{
         if (myProject.name == name) project = myProject;
       })
-      project.projectLeaders.forEach((leader)=>leader== this.userfirstName + " " + this.userlastName ? this.removeAsLeader(id) : this.removeAsMember(id))
+      project.projectLeaders.forEach((leader)=>leader== this.userFirstName + " " + this.userLastName ? this.removeAsLeader(id) : this.removeAsMember(id))
       if(project.projectLeaders.length==0) this.removeProject(id);
     })
   }
