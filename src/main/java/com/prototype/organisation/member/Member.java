@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.prototype.organisation.CustomProjectsSerializer;
 import com.prototype.organisation.project.Project;
+import com.prototype.organisation.task.Task;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -59,6 +60,9 @@ public class Member{
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Collection<Project> finishedProjects = new ArrayList<>();
 	
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "members")
+	private Collection<Task> tasks = new ArrayList<>();
+	
 	public Member() {
 		
 	}
@@ -66,7 +70,8 @@ public class Member{
 	
 	public Member(UUID id, String firstName, String lastName, String photoUrl, String position, String email,
 			String phone, Date joinDate, Date modifiedDate, Collection<Project> leadedProjects,
-			Collection<Project> memberProjects, Collection<Project> finishedProjects, String birthday, String password) {
+			Collection<Project> memberProjects, Collection<Project> finishedProjects, String birthday, String password,
+			Collection<Task> tasks) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -82,6 +87,7 @@ public class Member{
 		this.finishedProjects = finishedProjects;
 		this.birthday = birthday;
 		this.password = password;
+		this.tasks = tasks;
 	}
 	
 	public String getPassword() {
@@ -214,6 +220,11 @@ public class Member{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+	public void addTask(Task task) {
+		this.tasks.add(task);
+	}
+	public void removeTask(Task task) {
+		this.tasks.remove(task);
+	}
 	
 }

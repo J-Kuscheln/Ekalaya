@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -23,6 +24,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.prototype.organisation.CustomMembersSerializer;
 import com.prototype.organisation.member.Member;
 import com.prototype.organisation.milestone.Milestone;
+import com.prototype.organisation.task.Task;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -53,13 +55,14 @@ public class Project {
 	private Collection<Member> projectMembers = new ArrayList<>();
 	@Embedded
 	private Collection<Milestone> milestones = new ArrayList<>();
-	
+	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+	private Collection<Task> tasks = new ArrayList<>();
 	
 	public Project() {
 	}
 	
 	public Project(long id, String name, String status, String description, Date createdDate, Date modifiedDate,
-			Collection<Member> projectLeader, Collection<Member> projectMember, Collection<Milestone> milestones) {
+			Collection<Member> projectLeader, Collection<Member> projectMember, Collection<Milestone> milestones, Collection<Task> tasks) {
 		this.id = id;
 		this.name = name;
 		this.status = status;
@@ -69,6 +72,7 @@ public class Project {
 		this.projectLeaders = projectLeader;
 		this.projectMembers = projectMember;
 		this.milestones = milestones;
+		this.tasks = tasks;
 	}
 	
 	public long getId() {
@@ -141,5 +145,12 @@ public class Project {
 		this.milestones = milestones;
 	}
 	
+	public void addTask(Task task) {
+		this.tasks.add(task);
+	}
+	
+	public void removeTask(Task task) {
+		this.tasks.remove(task);
+	}
 	
 }

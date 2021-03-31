@@ -16,23 +16,23 @@ import com.prototype.organisation.member.Member;
 public class CustomMembersSerializer extends StdSerializer<Collection<Member>>{
 
 	public CustomMembersSerializer() {
-	        this(null);
-	    }
+        this(null);
+    }
 
-	    public CustomMembersSerializer(Class<Collection<Member>> t) {
-	        super(t);
-	    }
+    public CustomMembersSerializer(Class<Collection<Member>> t) {
+        super(t);
+    }
 
-	    @Override
-	    public void serialize(
-	    		Collection<Member> members, 
-	    		JsonGenerator generator, 
-	    		SerializerProvider provider) 
-	    		throws IOException, JsonProcessingException {
-					List<UUID> ids = new ArrayList<>();
-					for (Member member : members) {
-					    ids.add(member.getId());
-					}
-					generator.writeObject(ids);
-	    		}
+    @Override
+    public void serialize(
+	Collection<Member> members, 
+	JsonGenerator generator, 
+	SerializerProvider provider) 
+	throws IOException, JsonProcessingException {
+		List<UUID> ids = new ArrayList<>();
+		for (Member member : members) {
+		    ids.add(member.getId());
+		}
+		generator.writeObject(ids);
 	}
+}
