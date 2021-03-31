@@ -21,6 +21,8 @@ Currently running features:
 
 In progress:
 - Edit Project
+  - update functionality
+  - autofill all text-field
 - Project details
   -Details Page
   -Member can only read
