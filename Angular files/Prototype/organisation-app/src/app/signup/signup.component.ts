@@ -83,7 +83,8 @@ export class SignupComponent implements OnInit {
     let filledIndicator = true;
     let matchIndicator = false;
     let phoneNumber = false;
-    var elements:ElementRef[] = [this.firstName,
+    var elements:ElementRef[] = [
+      this.firstName,
       this.lastName,
       this.birthday,
       this.email,
@@ -92,10 +93,11 @@ export class SignupComponent implements OnInit {
       this.passValidator,
     ];
     for (let e in elements){
-      if(e!='4' && e!='6'){
+      if(e!='4' && e!='6' && e!='2'){
         filledIndicator = this.filledField(elements[e]);
       }
     }
+
 
     if(this.filledField(elements[6])){
       matchIndicator=this.passwordMatch(elements[5], elements[6]);
