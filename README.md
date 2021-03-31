@@ -27,6 +27,9 @@ In progress:
   -Member can only read
   -Leader Automatically to Edit Page
 
+Bug found:
+- double Email address not created (good), but no notification!
+
 Should be added:
 - "Take Leadership" from project with no leader
 - Add new entity to contain projects with no leader

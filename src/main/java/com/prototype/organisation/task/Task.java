@@ -24,6 +24,7 @@ public class Task {
 	private int id;
 	private String name;
 	private String description;
+	private String status;
 	@CreatedDate
 	private Date createdDate = new Date();
 	@LastModifiedDate
@@ -39,7 +40,7 @@ public class Task {
 	}
 
 
-	public Task(int id, String name, String description, Date createdDate, Date modifiedDate, Date dueDate, Project projects,
+	public Task(int id, String name, String description, String status, Date createdDate, Date modifiedDate, Date dueDate, Project projects,
 			Collection<Member> members) {
 		super();
 		this.id = id;
@@ -62,6 +63,16 @@ public class Task {
 	}
 
 	
+	public String getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+
 	public String getName() {
 		return name;
 	}

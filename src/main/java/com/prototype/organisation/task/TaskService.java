@@ -1,5 +1,6 @@
 package com.prototype.organisation.task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,15 @@ public class TaskService {
 		}
 	}
 	
-
+	public List<Task> getAllTask(){
+		try {
+			List<Task> tasks = new ArrayList<>();
+			repo.findAll().forEach(tasks::add);
+			return tasks;
+		}catch (Exception e) {
+			return null;
+		}
+	}
 	public HttpStatus removeTask(int id) {
 		try {
 			if(!repo.existsById(id)) return HttpStatus.NOT_FOUND;
