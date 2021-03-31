@@ -27,9 +27,6 @@ In progress:
   -Member can only read
   -Leader Automatically to Edit Page
 
-Bug found:
-- double Email address not created (good), but no notification!
-
 Should be added:
 - "Take Leadership" from project with no leader
 - Add new entity to contain projects with no leader
@@ -44,8 +41,10 @@ Should be added:
 - "play room"
 
 Bugs:
+- double Email address not created (good), but no notification!
 - Default Spring session cookie expired by closing the browser --> User automatically logged out from session.
     --> Possible solution: create custom cookie with maxAge.
+- failed login authentification notification should be added.
     
 Possible improvement:
 - UI/Design
