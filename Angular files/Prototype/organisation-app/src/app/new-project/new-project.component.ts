@@ -45,10 +45,10 @@ export class NewProjectComponent implements OnInit {
         "description":"`+ this.reformDesc(this.description.nativeElement.value) +`"
         }` 
         console.log("user name: ", name)
-        console.log(requestBody);
 
         this.createProject(requestBody).then((resp)=>{
           if(resp=="CREATED"){
+            console.log(resp);
             this.getProjectId(this.name.nativeElement.value)
             .then(projectId=>{
               requestBody = `{"memberId":"`+ this.id +`",
@@ -58,23 +58,16 @@ export class NewProjectComponent implements OnInit {
               
               this.createRelation(requestBody)
               .then(()=>{
-                console.log("redirect")
-                this.router.navigate(['/show-projects']).then(()=>location.reload())
-              })
-            })
-            
-            //this.createRelation(requestBody);
-            /*
-            .then(()=>{
-
+                console.log("redirect");
+                this.router.navigate(['/show-projects']);
+              });
             });
-            */
           }else if(resp=="USED"){
             this.name.nativeElement.setAttribute("class", "form-control is-invalid")
           }else{
             this.connection.nativeElement.setAttribute("class", "form-control is-invalid")
           }
-        })
+        });
       });
     }
   }

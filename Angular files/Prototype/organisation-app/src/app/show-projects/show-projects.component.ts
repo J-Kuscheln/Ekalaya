@@ -130,7 +130,7 @@ export class ShowProjectsComponent implements OnInit {
 
   removeProject(id:number){
     let url:string = this.baseUrl+"/projects/" + id
-    fetch(url,{method:'DELETE', credentials:'include'})
+    return fetch(url,{method:'DELETE', credentials:'include'})
     .then(()=>{location.reload();})
     .catch(()=>console.log("fail to delete"))
   }
@@ -154,7 +154,7 @@ export class ShowProjectsComponent implements OnInit {
 
   }
 
-  removeAsLeader(id:number){
+  removeAsLeader(id:number, project:Project){
     let requestBody = `{"memberId":"`+ this.id +`",
     "projectId":`+ id +`,
     "toDo":"removeAsLeader"
@@ -168,7 +168,13 @@ export class ShowProjectsComponent implements OnInit {
         headers:{'Content-Type': 'application/json'},
         body:requestBody
       })
-    .then(()=>location.reload())
+    .then(()=>{
+      console.log("Number of Project leaders: ", project.projectLeaders.length);
+      //if the number of leader before the leader removed is 1 (so the after the removal = 0)
+      if(project.projectLeaders.length==1){
+        this.removeProject(id).then(()=>location.reload());
+      }
+    })
     .catch(()=>console.log("failed to remove as leader"))
 
   }
@@ -200,8 +206,7 @@ export class ShowProjectsComponent implements OnInit {
       this.myProjects.forEach((myProject)=>{
         if (myProject.name == name) project = myProject;
       })
-      project.projectLeaders.forEach((leader)=>leader== this.userFirstName + " " + this.userLastName ? this.removeAsLeader(id) : this.removeAsMember(id))
-      if(project.projectLeaders.length==0) this.removeProject(id);
+      project.projectLeaders.forEach((leader)=>leader== this.id ? this.removeAsLeader(id, project) : this.removeAsMember(id))
     })
   }
 

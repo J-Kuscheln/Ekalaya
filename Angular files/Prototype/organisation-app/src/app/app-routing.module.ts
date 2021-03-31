@@ -1,3 +1,4 @@
+import { EditProjectComponent } from './edit-project/edit-project.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { NewProjectComponent } from './new-project/new-project.component';
 import { SignupComponent } from './signup/signup.component';
@@ -13,7 +14,10 @@ const routes: Routes = [
   {path: 'login', component: LoginPageComponent},
   {path: 'signUp', component: SignupComponent},
   {path: 'new-project', component: NewProjectComponent},
-  {path: 'edit-profile', component: EditProfileComponent}
+  {path: 'edit-profile', component: EditProfileComponent},
+  {path: 'edit-project', 
+      children: [{path:'**', component: EditProjectComponent}]
+  }
 ];
 
 @NgModule({
