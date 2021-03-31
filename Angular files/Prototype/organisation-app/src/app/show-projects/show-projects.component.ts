@@ -14,9 +14,9 @@ export class ShowProjectsComponent implements OnInit {
   myProjects: Project[]
   projectsContainer: Array<Project[]>
   loggedIn:boolean = false;
-  public userFirstName: string
-  public userLastName: string
-  private id: string
+  private userFirstName: string
+  private userLastName: string
+  public id: string
   private baseUrl = environment.apiBaseUrl
   constructor(private session:SessionService, private router:Router) { 
     this.projects = [];

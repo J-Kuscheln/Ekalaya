@@ -82,7 +82,7 @@
                         Edit
                     </button>
                     
-                    <button class="btn btn-primary" id="editDetails_{{project.id}}" type="button" aria-haspopup="true" aria-expanded="false" *ngIf="i==0 && project.projectLeaders[0]==(userFirstName + ' ' + userLastName)" (click)="details(project.id)">
+                    <button class="btn btn-primary" id="editDetails_{{project.id}}" type="button" aria-haspopup="true" aria-expanded="false" *ngIf="i==0 && project.projectLeaders[0]==(id)" (click)="details(project.id)">
                         Edit details
                     </button>
 
@@ -90,8 +90,8 @@
                     aria-haspopup="true" aria-expanded="false" 
                     data-bs-toggle="modal" data-bs-target="#removeModal" (click)="modifyModal(project.id,project.name)"
                     *ngIf="i==0">
-                        <div *ngIf="project.projectLeaders[0]==(userFirstName + ' ' + userLastName)">Remove Project</div>
-                        <div *ngIf="project.projectLeaders[0]!=(userFirstName + ' ' + userLastName)">Resign</div>
+                        <div *ngIf="project.projectLeaders[0]==(id)">Remove Project</div>
+                        <div *ngIf="project.projectLeaders[0]!=(id)">Resign</div>
                     </button>
                     
                     <button class="btn btn-primary" id="done_{{project.id}}" type="button" aria-haspopup="true" aria-expanded="false" *ngIf="i==0 " (click)="cancel(project.id)">
