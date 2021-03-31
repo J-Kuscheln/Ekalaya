@@ -3,6 +3,7 @@ import { SessionService } from './../services/session.service';
 import { Router } from '@angular/router';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-project',
@@ -20,6 +21,7 @@ export class EditProjectComponent implements OnInit {
   private connection : ElementRef;
   private projectId : number;
   private baseUrl = environment.apiBaseUrl;
+  private subscrip : Subscription;
   constructor(private router:Router, private service:SessionService) { }
 
   ngOnInit(): void {
@@ -35,7 +37,7 @@ export class EditProjectComponent implements OnInit {
 
     this.service.checkSession();
 
-    this.service.myStatus$.subscribe(stat=>{
+    this.subscrip = this.service.myStatus$.subscribe(stat=>{
       if(stat!=null) {
         this.loggedIn=true;
         this.main();
@@ -48,17 +50,29 @@ export class EditProjectComponent implements OnInit {
 
   }
 
+  ngOnDestroy(){
+    this.subscrip.unsubscribe();
+  }
+
   goHome(){
     this.router.navigate(['/']);
     location.reload();
   }
 
-  async main(){
+  
+  main(){
     let project:Project;
-    await this.getProject(this.projectId)
-    .then(resp=>project=resp);
+    this.getProject(this.projectId)
+    .then(resp=>{
+      project=resp;
 
-    console.log(project.name);
+      if(resp!=null){
+        this.name.nativeElement.value = project.name;
+        this.desc.nativeElement.value = project.description;
+        let button = document.getElementsByName("submit")[0];
+        button.className = "btn btn-primary";
+      }
+    });
   }
 
   getProject(id:number){
@@ -66,7 +80,7 @@ export class EditProjectComponent implements OnInit {
     return fetch(url,{credentials:'include'}).then(resp=>resp.json()).then(data=>data);
   }
   update(){
-
+    console.log("UPDATE!")
   }
 
 }

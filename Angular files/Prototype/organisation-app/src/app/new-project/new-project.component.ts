@@ -3,6 +3,7 @@ import { environment } from './../../environments/environment';
 import { SessionService } from '../services/session.service';
 import { Router } from '@angular/router';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-new-project',
@@ -19,22 +20,29 @@ export class NewProjectComponent implements OnInit {
   @ViewChild("connection")
   private connection:ElementRef
   private baseUrl = environment.apiBaseUrl
+  private subscription : Subscription;
   constructor(private router:Router, private session:SessionService) {
     this.loggedIn = false;
     this.id = "";
   }
 
   ngOnInit(): void {
-    this.session.myStatus$.subscribe(sessionStat=>{
+    
+    this.session.checkSession();
+    this.subscription = this.session.myStatus$.subscribe(sessionStat=>{
       if(sessionStat!=null){
         this.loggedIn = true;
         this.id = sessionStat;
       }else this.loggedIn=false;
 
       if (this.loggedIn==false) this.router.navigate(["/"])
-    });
+    })
 
-    this.session.checkSession();
+    
+  }
+
+  ngOnDestroy(){
+    this.subscription.unsubscribe();
   }
 
   create(){

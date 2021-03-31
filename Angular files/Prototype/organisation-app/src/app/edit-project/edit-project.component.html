@@ -2,15 +2,15 @@
     <form onsubmit="document.getElementById('submit').click(); return false" *ngIf="loggedIn">
         <div class="mb-3">
             <label for="name" class="form-label">Project Name: </label>
-            <input type="text" class="form-control" id="name" aria-describedby="validationName" required #name>
+            <input type="text" class="form-control" id="name" aria-describedby="validationName" value="loading..." required #name>
             <div id="validationName" class="invalid-feedback">Project name already used! Try another name</div>
         </div>
         <div class="mb-3">
             <label for="desc" class="form-label">Description: </label>
-            <textarea class="form-control" id="desc" rows="5" required #desc></textarea>
+            <textarea class="form-control" id="desc" rows="5" value="loading..." required #desc></textarea>
         </div>
 
-        <input class="btn btn-primary" type="submit" name="submit" value="Create"/> 
+        <input class="btn btn-secondary" type="submit" name="submit" value="Update" /> <!--type="submit"-->
         <div class="mb-3">
             <input type="text" class="form-control" id="connection" aria-describedby="validationConnection" style="display:none" #connection>
             <div id="validationConnection" class="invalid-feedback">Connection Error!</div>
