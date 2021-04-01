@@ -32,11 +32,11 @@ export class ShowProjectsComponent implements OnInit {
 
     this.session.myStatus$.subscribe(sessionStat=>{
       if(sessionStat!=null){
-        console.log("logged in");
+        //console.log("logged in");
         this.loggedIn = true;
         this.id = sessionStat;
       }else {
-        console.log("logged out");
+        //console.log("logged out");
         this.loggedIn=false;
       }
     });
@@ -96,7 +96,7 @@ export class ShowProjectsComponent implements OnInit {
   }
 
   updateMemberDOM(projectId:number, memberId:string, response:string){
-    console.log(projectId + memberId);
+    //console.log(projectId + memberId);
     let component = document.getElementById(projectId + memberId);
     component.textContent = response;
     component.setAttribute("id", response);
@@ -169,7 +169,7 @@ export class ShowProjectsComponent implements OnInit {
         body:requestBody
       })
     .then(()=>{
-      console.log("Number of Project leaders: ", project.projectLeaders.length);
+      //console.log("Number of Project leaders: ", project.projectLeaders.length);
       //if the number of leader before the leader removed is 1 (so the after the removal = 0)
       if(project.projectLeaders.length==1){
         this.removeProject(id).then(()=>location.reload());
@@ -191,7 +191,7 @@ export class ShowProjectsComponent implements OnInit {
   }
 
   details(id:number){
-    console.log("details id: ",id)
+    //console.log("details id: ",id)
     this.router.navigate(['/edit-project/'+id]);
   }
 

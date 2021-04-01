@@ -22,9 +22,11 @@ Currently running features:
 In progress:
 - Edit Project
   - update functionality
+  - add task button
 - Project details
   -Details Page
-  -Member can only read
+  -Member can only read the description
+  -Member can update their tasks
   -Leader Automatically to Edit Page
 
 Should be added:

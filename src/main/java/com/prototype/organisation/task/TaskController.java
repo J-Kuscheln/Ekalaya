@@ -76,7 +76,7 @@ public class TaskController {
 			
 			return tasks;
 		}catch (Exception e) {
-			System.out.println("ERROR: something wrong in getTaskInProject()");
+			System.out.println("ERROR: something wrong in getTaskInMember()");
 			return null;
 		}
 	}

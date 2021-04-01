@@ -2,6 +2,7 @@ import { environment } from './../../environments/environment';
 import { SessionService } from '../services/session.service';
 import { Member } from './../member/Member';
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-show-members',
@@ -11,14 +12,18 @@ import { Component, OnInit } from '@angular/core';
 export class ShowMembersComponent implements OnInit {
   members: Member[]
   private baseUrl = environment.apiBaseUrl
+  private subscrip:Subscription
   constructor(private session:SessionService) {
     this.members = [];
   }
   
   ngOnInit(): void {
     this.getDataMember();
-    this.session.myStatus$.subscribe(sessionStat=>console.log("sessionStat: " + sessionStat));
+    this.subscrip = this.session.myStatus$.subscribe(sessionStat=>console.log("sessionStat: " + sessionStat));
     this.session.checkSession();
+  }
+  ngOnDestroy(){
+    this.subscrip.unsubscribe();
   }
 
   getDataMember(){
