@@ -4,16 +4,16 @@
         <div class="card" *ngFor="let e of members; let i = index" style="width: 18rem; margin:2%;">
             <div class="card-body" >
                 <div class="row">
-                    <h3>{{e.firstName}}</h3>
+                    <h3 id="firstName">{{e.firstName}}</h3>
                     <hr>
                 </div>
 
                 <div class="row">
-                    <p><b>Position:</b> {{e.position}}</p>
+                    <p id="position"><b>Position:</b> {{e.position}}</p>
                 </div>
 
                 <div class="row">
-                    <p><b>Email:</b> {{e.email}}</p>
+                    <p id="email"><b>Email:</b> {{e.email}}</p>
                     <hr>
                 </div>
 

@@ -1,7 +1,6 @@
 package com.prototype.organisation.member;
 
 
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

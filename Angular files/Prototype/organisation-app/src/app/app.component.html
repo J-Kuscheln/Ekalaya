@@ -7,9 +7,9 @@
 
   <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent" style="font-size: 1.3rem;"> 
     <ul class="navbar-nav" style="margin-right: 10%;"> 
-          <li class="nav-item"><a routerLink="/" class="nav-link" >Home</a></li>
-          <li class="nav-item"><a routerLink="/show-members" class="nav-link">Members</a></li>
-          <li class="nav-item"><a routerLink="/show-projects" class="nav-link">Projects</a></li>
+          <li class="nav-item"><a routerLink="/" class="nav-link" id="home-btn">Home</a></li>
+          <li class="nav-item"><a routerLink="/show-members" class="nav-link" id="members-btn">Members</a></li>
+          <li class="nav-item"><a routerLink="/show-projects" class="nav-link" id="projects-btn">Projects</a></li>
 
           <li class="nav-item dropdown" *ngIf="!logged && router.url!='/login' && logInOut =='Login'">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
@@ -24,14 +24,14 @@
             </ul>
           </li>
 
-          <li class="nav-item"><a class="nav-link" *ngIf="logged" (click)="logout()" style="cursor: pointer;">Logout</a></li>
+          <li class="nav-item"><a class="nav-link" id="logout-btn" *ngIf="logged" (click)="logout()" style="cursor: pointer;">Logout</a></li>
           <li class="nav-item"><a routerLink="/signUp" class="nav-link" *ngIf="!logged && logInOut=='Login'">Sign up</a></li>
           <li class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle" role="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false" *ngIf="logged && logInOut=='Logout'">
               {{userLastName}}
             </a>
 
-            <ul class="dropdown-menu" id="profileDropdown">
+            <ul class="dropdown-menu" id="profile-dropdown-menu">
               <li><a class="dropdown-item" routerLink="/edit-profile">Edit Profile</a></li>
               <li><a class="dropdown-item" href="#">Messages</a></li>
             </ul>

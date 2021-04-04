@@ -94,7 +94,8 @@ export class SignupComponent implements OnInit {
     ];
     for (let e in elements){
       if(e!='4' && e!='6' && e!='2'){
-        filledIndicator = this.filledField(elements[e]);
+        let temp = this.filledField(elements[e]);
+        filledIndicator = filledIndicator? temp : false;
       }
     }
 

@@ -3,6 +3,7 @@ import { environment } from './../../environments/environment';
 import { Router, RouterModule } from '@angular/router';
 import { SessionService } from '../services/session.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login-page',
@@ -16,6 +17,7 @@ export class LoginPageComponent implements OnInit {
   email?:ElementRef
   @ViewChild("password")
   password?: ElementRef
+  subsrcip:Subscription
   constructor(private session: SessionService, 
     private router:Router,
     private hashService:HashService
@@ -23,14 +25,17 @@ export class LoginPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.session.myStatus$
+    this.subsrcip = this.session.myStatus$
     .subscribe(sessionStat=>{
       if(sessionStat!=null && this.router.url == "/login"){
         this.router.navigate(["/"]);
       }
-      
-      if(this.router.url=="/login") document.getElementById('main-container').setAttribute("style", "margin-top:10%");
     });
+    if(this.router.url=="/login") document.getElementById('main-container').setAttribute("style", "margin-top:10%");
+  }
+
+  ngOnDestroy(){
+    this.subsrcip.unsubscribe();
   }
 
   hashCode() {
