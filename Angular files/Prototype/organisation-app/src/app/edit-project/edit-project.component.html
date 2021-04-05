@@ -12,10 +12,10 @@
 
         <input class="btn btn-secondary" id="updateBtn" type="submit" name="submit" value="Update" /> <!--type="submit"-->
         <div class="mb-3">
-            <input type="text" class="form-control" id="connection" aria-describedby="validationConnection" style="display:none" #connection>
-            <div id="validationConnection" class="invalid-feedback">Connection Error!</div>
+            <div id="warning-text" class="warning-text" style="color:red" #warning></div>
         </div>
     </form>
+    <button id="submit" (click)="update()" style="display: none;"></button>
 </div>
 <div class="container">
     <div class="card">
@@ -42,4 +42,4 @@
         </div>
     </div>
 </div>
-<button id="submit" (click)="update()" style="display: none;"></button>
+

@@ -27,13 +27,11 @@ export class EditProjectComponent implements OnInit {
   ngOnInit(): void {
     let urlSplit = this.router.url.split("/");
     if(urlSplit.length!=3) {
-      console.log("HERE 1")
       this.goHome();
     }
 
     try{this.projectId = <number><unknown> urlSplit[2].valueOf();}
     catch(e){
-      console.log("HERE 2")
       this.goHome();
     }
 
@@ -46,7 +44,6 @@ export class EditProjectComponent implements OnInit {
         .then(resp=>{
           project=resp;
           if(project==null){
-            console.log("HERE 3")
             this.goHome();
           }
           
@@ -56,7 +53,6 @@ export class EditProjectComponent implements OnInit {
               this.loggedIn=true;
               this.main(project);
             }else{
-              console.log("HERE 4")
               this.goHome();
             }
           })
@@ -64,7 +60,6 @@ export class EditProjectComponent implements OnInit {
       }
       else {
         this.loggedIn=false;
-        console.log("HERE 4")
         this.goHome();
       }
     })
@@ -73,14 +68,12 @@ export class EditProjectComponent implements OnInit {
 
   ngOnDestroy(){
     if(this.subscrip!=null) {
-      console.log("DESTROOOY")
       this.subscrip.unsubscribe();
     }
   }
 
   isAuthorized(memberId:string, project:Project):Promise<boolean>{
     let member:Member;
-    console.log("is authorized!")
     return this.getMember(memberId).then(m=>{
       member=m
       for(let i in project.projectLeaders){
@@ -118,7 +111,26 @@ export class EditProjectComponent implements OnInit {
     return fetch(url,{credentials:'include'}).then(resp=>resp.json()).then(data=>data);
   }
   update(){
-    console.log("UPDATE!")
+    let body = {
+      name:this.name.nativeElement.value,
+      description:this.desc.nativeElement.value
+    }
+    let headerContent = {
+      "Content-Type":'application/json'
+    }
+    let url = this.baseUrl + "/projects/" + this.projectId;
+
+    fetch(url,{credentials:'include',headers:headerContent, body:JSON.stringify(body), method:'PUT'})
+    .then(resp=>resp.json())
+    .then(data=>{
+      if(data=="IM_USED"){
+        this.name.nativeElement.setAttribute("class", "form-control is-invalid");
+      }
+      else if(data=="CREATED"){
+        this.name.nativeElement.setAttribute("class", "form-control is-valid");
+        this.desc.nativeElement.setAttribute("class", "form-control is-valid");
+      }
+    });
   }
 
 }

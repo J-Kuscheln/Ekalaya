@@ -51,7 +51,6 @@ export class EditProfileComponent implements OnInit {
   ngOnInit(): void {
     this.session.myStatus$
     .subscribe(resp=>{
-      console.log(resp);
       if(resp==null) {
         this.router.navigate(["/"]).then(()=>location.reload());
         return;
@@ -68,7 +67,6 @@ export class EditProfileComponent implements OnInit {
   }
 
   updateMember(){
-    console.log("update member...")
     let status = document.querySelector("div #status");
     if(this.isValidInput(this.phone)){
       this.isAuthorized()
@@ -93,7 +91,6 @@ export class EditProfileComponent implements OnInit {
           .then(resp2=>resp2)
           .then(data2=>{
             //status 400: Bad_Request --> format failure
-            console.log("update status: ", data2.status);
             if(data2.status==200) {
               this.session.myUserName(this.firstName.nativeElement.value,this.lastName.nativeElement.value);
               status.textContent = "Changes saved!";
@@ -116,11 +113,7 @@ export class EditProfileComponent implements OnInit {
           this.oldPassword.nativeElement.className="form-control is-invalid";
           document.querySelector("#oldPassword-invalid-feedback").textContent = "Wrong password!"
         }
-        
       });
-      
-
-      
     }
   }
 

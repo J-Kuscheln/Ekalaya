@@ -21,7 +21,6 @@ Currently running features:
 
 In progress:
 - Edit Project
-  - update functionality
   - add task button
 - Project details
   -Details Page

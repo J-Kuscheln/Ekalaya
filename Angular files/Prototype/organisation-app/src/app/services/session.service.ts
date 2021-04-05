@@ -30,8 +30,22 @@ export class SessionService {
   }
 
   async checkSession(){
-    console.log("checking session....")
+    //console.log("checking session....")
     return fetch(this.baseUrl+"/auth/session",{credentials:'include'}).then(response=>response.json())
-    .then(data=>this.myStatus(data["USER_ID"]));
+    .then(async data=>{
+      if(data["USER_ID"]!=null){
+        this.getUserInfo(data["USER_ID"])
+        .then(data=>{
+        this.myUserName(data.firstName, data.lastName);
+        });
+      }
+      return this.myStatus(data["USER_ID"]);
+    });
+  }
+
+  async getUserInfo(id:string){
+    console.log("get User Info...")
+    return fetch(this.baseUrl+"/members/"+id,{credentials:'include'}).then(response=>response.json())
+    .then(data=>data);
   }
 }

@@ -19,7 +19,7 @@ export class ShowMembersComponent implements OnInit {
   
   ngOnInit(): void {
     this.getDataMember();
-    this.subscrip = this.session.myStatus$.subscribe(sessionStat=>console.log("sessionStat: " + sessionStat));
+    this.subscrip = this.session.myStatus$.subscribe();
     this.session.checkSession();
   }
   ngOnDestroy(){

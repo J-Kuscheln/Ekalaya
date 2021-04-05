@@ -2,6 +2,8 @@ package com.prototype.organisation.project;
 
 import java.util.Collection;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,9 +46,26 @@ public class ProjectController {
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-	public HttpStatus updateProject(@PathVariable long id, @RequestBody Project project) {
-		project.setId(id);
-		return service.updateProject(project);
+	public HttpStatus updateProject(@PathVariable long id, @RequestBody Project project, HttpServletResponse response) {
+		System.out.println("New Project Name: " + project.getName());
+		System.out.println("New Project Desc: " + project.getDescription());
+		
+		HttpStatus status;
+		
+		Project sameProject = service.getProjectByName(project.getName());
+		
+		if(sameProject!=null && sameProject.getId()!=id) {
+			status = HttpStatus.IM_USED;
+			response.setStatus(status.value());
+			return status;
+		}
+		
+		Project oldProject = service.getProject(id);
+		
+		oldProject.setDescription(project.getDescription());
+		oldProject.setName(project.getName());
+		
+		return service.updateProject(oldProject);
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
