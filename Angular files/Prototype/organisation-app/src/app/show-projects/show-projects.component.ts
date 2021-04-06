@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SessionService } from '../services/session.service';
 import { Project } from './../project/Project';
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-show-projects',
@@ -18,6 +19,9 @@ export class ShowProjectsComponent implements OnInit {
   private userLastName: string
   public id: string
   private baseUrl = environment.apiBaseUrl
+  private subsciptionFirstName : Subscription;
+  private subcriptionLastName : Subscription;
+  private subscriptionStatus : Subscription;
   constructor(private session:SessionService, private router:Router) { 
     this.projects = [];
     this.myProjects = [];
@@ -26,11 +30,11 @@ export class ShowProjectsComponent implements OnInit {
     this.userFirstName = null;
   }
 
-  ngOnInit(): void {
-    this.session.myUserFirstName$.subscribe((sessionName)=>this.userFirstName = sessionName)
-    this.session.myUserLastName$.subscribe((sessionName)=>this.userLastName = sessionName)
+  async ngOnInit(){
+    this.subsciptionFirstName = this.session.myUserFirstName$.subscribe((sessionName)=>this.userFirstName = sessionName)
+    this.subcriptionLastName = this.session.myUserLastName$.subscribe((sessionName)=>this.userLastName = sessionName)
 
-    this.session.myStatus$.subscribe(sessionStat=>{
+    this.subscriptionStatus = this.session.myStatus$.subscribe(sessionStat=>{
       if(sessionStat!=null){
         //console.log("logged in");
         this.loggedIn = true;
@@ -41,7 +45,7 @@ export class ShowProjectsComponent implements OnInit {
       }
     });
     
-    this.session.checkSession();
+    await this.session.checkSession();
     
     this.getProjects()
     .then(data=>{
@@ -94,7 +98,11 @@ export class ShowProjectsComponent implements OnInit {
     
     
   }
-
+  ngOnDestroy(){
+    this.subsciptionFirstName.unsubscribe();
+    this.subcriptionLastName.unsubscribe();
+    this.subscriptionStatus.unsubscribe();
+  }
   updateMemberDOM(projectId:number, memberId:string, response:string){
     //console.log(projectId + memberId);
     let component = document.getElementById(projectId + memberId);

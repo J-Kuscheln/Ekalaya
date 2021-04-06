@@ -11,6 +11,7 @@ import { SignupComponent } from './signup/signup.component';
 import { NewProjectComponent } from './new-project/new-project.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { EditProjectComponent } from './edit-project/edit-project.component';
+import { HomePageComponent } from './home-page/home-page.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { EditProjectComponent } from './edit-project/edit-project.component';
     SignupComponent,
     NewProjectComponent,
     EditProfileComponent,
-    EditProjectComponent
+    EditProjectComponent,
+    HomePageComponent
   ],
   imports: [
     BrowserModule,

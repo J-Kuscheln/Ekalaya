@@ -31,7 +31,10 @@ export class LoginPageComponent implements OnInit {
         this.router.navigate(["/"]);
       }
     });
-    if(this.router.url=="/login") document.getElementById('main-container').setAttribute("style", "margin-top:10%");
+    if(this.router.url=="/login") {
+      document.getElementById('main-container').setAttribute("style", "margin-top:10%");
+      this.session.checkSession();
+    }
   }
 
   ngOnDestroy(){
@@ -44,23 +47,9 @@ export class LoginPageComponent implements OnInit {
     let password:string = this.password?.nativeElement.value;
 
     let hash = this.hashService.hash(email,password);
-    /*
-    let str =  email + password;
-    var hash = 0, i, chr;
-    for (i = 0; i < str.length; i++) {
-      chr   = str.charCodeAt(i);
-      hash  = ((hash << 5) - hash) + chr;
-      hash |= 0; // Convert to 32bit integer
-    }
-    */
 
-    /*
-    console.log("email: " + email)
-    console.log("pass: " + password)
-    console.log("hash: " + hash)
-    */
     let jsonBody:string = `{"email":"` + email + `", "password":"` + hash + `"}`
-    console.log(jsonBody);
+    
     this.login(jsonBody).then(response=>{
       if(response){
         window.location.reload()

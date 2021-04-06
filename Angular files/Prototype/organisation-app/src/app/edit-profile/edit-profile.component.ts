@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { Project } from './../project/Project';
 import { HashService } from '../services/hash.service';
 import { Router } from '@angular/router';
@@ -44,21 +45,25 @@ export class EditProfileComponent implements OnInit {
   @ViewChild("newPassword")
   newPassword:ElementRef
 
-
+  private subscrip:Subscription;
   private baseUrl = environment.apiBaseUrl;
   constructor(private session:SessionService, private router:Router, private hashService:HashService ) { }
 
   ngOnInit(): void {
-    this.session.myStatus$
+    this.subscrip = this.session.myStatus$
     .subscribe(resp=>{
       if(resp==null) {
-        this.router.navigate(["/"]).then(()=>location.reload());
+        this.router.navigate(["/"]);
         return;
       }
-      this.getMember(resp).then(respData=>this.member=respData).finally();
+      this.getMember(resp).then(respData=>this.member=respData);
     })
 
     this.session.checkSession();
+  }
+
+  ngOnDestroy(){
+    this.subscrip.unsubscribe();
   }
 
   getMember(id:String){
@@ -137,10 +142,8 @@ export class EditProfileComponent implements OnInit {
                   //logout (close session)
                   let url = this.baseUrl + "/auth/logout";
                   fetch(url,{credentials:'include'})
-                  .finally(()=>{
+                  .then(()=>{
                     this.router.navigate(["/"]);
-                    this.session.myStatus(null);
-                    location.reload();
                   });
                 });
               });

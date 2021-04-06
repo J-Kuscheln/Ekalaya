@@ -23,10 +23,10 @@ In progress:
 - Edit Project
   - add task button
 - Project details
-  -Details Page
-  -Member can only read the description
-  -Member can update their tasks
-  -Leader Automatically to Edit Page
+  - Details Page
+  - Member can only read the description
+  - Member can update their tasks
+  - Leader Automatically to Edit Page
 
 Should be added:
 - "Take Leadership" from project with no leader
