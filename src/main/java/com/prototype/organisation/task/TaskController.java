@@ -16,16 +16,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.prototype.organisation.member.Member;
+import com.prototype.organisation.member.MemberService;
+import com.prototype.organisation.project.Project;
+import com.prototype.organisation.project.ProjectService;
 
 @RestController
-@RequestMapping("/Tasks")
+@RequestMapping("/tasks")
 public class TaskController {
 	
 	@Autowired
 	private TaskService service;
+	@Autowired
+	private ProjectService projectService;
+	@Autowired
+	private MemberService memberService;
+	
+	@RequestMapping()
+	public List<Task> getAllTask(){ 
+		return service.getAllTask();
+	}
 	
 	@RequestMapping("/{id}")
-	public Task getTask(@PathVariable int id, @RequestHeader String memberId, HttpServletRequest request) {
+	public Task getTask(@PathVariable int id, @RequestHeader("memberId") String memberId, HttpServletRequest request) {
 		Task task= service.getTask(id);
 		boolean isLoggedIn = request.getSession().getAttribute("USER_ID")!=null;
 		//should add if logged in *later
@@ -35,15 +47,45 @@ public class TaskController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public HttpStatus addTask(@RequestBody Task task, HttpServletRequest request) {
-		if(request.getSession().getAttribute("USER_ID")!=null) return service.addTask(task);
+	public HttpStatus addTask(@RequestBody Task task, HttpServletRequest request, @RequestHeader("PID") String projectId,
+			@RequestHeader("UID") String userId) {
+		System.out.println("task name: " + task.getName());
+		System.out.println("projectId: " + projectId);
+		System.out.println("userId: " + userId);
+		
+		try {
+			//relate task with project
+			Project project = projectService.getProject(Long.valueOf(projectId));
+			task.setProject(project);
+			
+			//relate task with user
+			String[] userIds = userId.split(",");
+			for(String Id : userIds) {
+				Member member = memberService.getMember(UUID.fromString(Id));
+				task.addMembers(member);
+			}
+			
+			HttpStatus status = service.addTask(task);
+			return status;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return HttpStatus.EXPECTATION_FAILED;
+		}
+		
+		
+		//Authorisation
+		/*
+		if(request.getSession().getAttribute("USER_ID")!=null) {
+			
+		}
 		return HttpStatus.UNAUTHORIZED;
+		*/
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
-	public HttpStatus removeTask(@PathVariable int id, @RequestHeader String memberId) {
+	public HttpStatus removeTask(@PathVariable int id, @RequestHeader("id") String memberId) {
 		Task task= service.getTask(id);
-		if(!isMemberRegistered(task,memberId)) return HttpStatus.UNAUTHORIZED;
+		if(!isLeader(task, memberId)) return HttpStatus.UNAUTHORIZED;
 		return service.removeTask(id);
 	}
 	
@@ -92,6 +134,14 @@ public class TaskController {
 			if(UUID.fromString(memberId)==memberInTask.getId()) {
 				return true;
 			} 
+		}
+		return false;
+	}
+	
+	private boolean isLeader(Task task, String memberId) {
+		Project project = task.getProject();
+		for(Member leader: project.getProjectLeaders()) {
+			if(leader.getId().equals(UUID.fromString(memberId))) return true;
 		}
 		return false;
 	}
