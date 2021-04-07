@@ -19,7 +19,12 @@ export class EditProjectComponent implements OnInit {
   private desc : ElementRef;
   @ViewChild("connection")
   private connection : ElementRef;
+  
+  private project : Project;
   private projectId : number;
+  public memberNames : string[] = [];
+  private memberIds : string[] = [];
+
   private baseUrl = environment.apiBaseUrl;
   private subscrip : Subscription;
   constructor(private router:Router, private service:SessionService) { }
@@ -39,19 +44,18 @@ export class EditProjectComponent implements OnInit {
 
     this.subscrip = this.service.myStatus$.subscribe(stat=>{
       if(stat!=null) {
-        let project:Project;
         this.getProject(this.projectId)
         .then(resp=>{
-          project=resp;
-          if(project==null){
+          this.project=resp;
+          if(this.project==null){
             this.goHome();
           }
           
-          this.isAuthorized(stat,project)
+          this.isAuthorized(stat)
           .then(authorized=>{
             if(authorized){
               this.loggedIn=true;
-              this.main(project);
+              this.main();
             }else{
               this.goHome();
             }
@@ -72,12 +76,12 @@ export class EditProjectComponent implements OnInit {
     }
   }
 
-  isAuthorized(memberId:string, project:Project):Promise<boolean>{
+  isAuthorized(memberId:string):Promise<boolean>{
     let member:Member;
     return this.getMember(memberId).then(m=>{
-      member=m
-      for(let i in project.projectLeaders){
-        if(memberId==project.projectLeaders[i]) return true;
+      member=m;
+      for(let i in this.project.projectLeaders){
+        if(memberId==this.project.projectLeaders[i]) return true;
       }
       return false;
     });
@@ -95,14 +99,28 @@ export class EditProjectComponent implements OnInit {
   }
 
   
-  main(project:Project){
+  async main(){
+    this.getMemberNames();
     if(!this.name && !this.desc){
       setTimeout(()=>{
-        this.name.nativeElement.value = project.name;
-        this.desc.nativeElement.value = project.description;
+        this.name.nativeElement.value = this.project.name;
+        this.desc.nativeElement.value = this.project.description;
         let button = document.getElementsByName("submit")[0];
         button.className = "btn btn-primary";
       })
+    }
+  }
+
+  async getMemberNames(){
+    for(let i in this.project.projectLeaders){
+      let member = await this.getMember(<string>this.project.projectLeaders[i])
+      this.memberNames.push(member.firstName+" "+member.lastName);
+      this.memberIds.push(<string>this.project.projectLeaders[i]);
+    }
+    for(let i in this.project.projectMembers){
+      let member = await this.getMember(<string>this.project.projectMembers[i])
+      this.memberNames.push(member.firstName+" "+member.lastName);
+      this.memberIds.push(<string>this.project.projectMembers[i]);
     }
   }
 
@@ -133,4 +151,40 @@ export class EditProjectComponent implements OnInit {
     });
   }
 
+  addTask(){
+    console.log("ADD TASK!");
+    let taskName = <HTMLInputElement> document.getElementById("task-name");
+    let taskDesc = <HTMLInputElement> document.querySelector("#task-desc");
+    let responsible:string[] = [];
+    console.log("task name: ",taskName.value);
+    console.log("task desc: ",taskDesc.value);
+
+    for(let i in this.memberNames){
+      let checkBox = <HTMLInputElement>document.querySelector("#check-"+i);
+      if(checkBox.checked){
+        responsible.push(this.memberIds[i]);
+      }
+    }
+    let headerUid = "";
+    for(let i in responsible){
+      headerUid += responsible[i];
+      if(i != (responsible.length-1).toString()) headerUid+="&";
+    }
+    console.log("do the job: ", headerUid);
+
+    let url = this.baseUrl+"/tasks";
+    let body = {
+      name: taskName.value,
+      description: taskDesc.value,
+      status: "on progress"
+    }
+
+    //
+    fetch(url,{
+      method:'post',
+      credentials:'include',
+      headers:{'Content-Type': 'application/json', 'PID':this.projectId.toString(), 'UID':headerUid},
+      body:JSON.stringify(body)
+    })
+  }
 }

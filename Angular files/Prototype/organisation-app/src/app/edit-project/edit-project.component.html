@@ -16,8 +16,36 @@
         </div>
     </form>
     <button id="submit" (click)="update()" style="display: none;"></button>
+    <hr>
 </div>
+
 <div class="container">
+    <div class="mb-3">
+        <label for="task-name" class="form-label">Task Name: </label>
+        <input type="text" class="form-control" id="task-name" aria-describedby="validationTaskName"/>
+        <div id="validationTaskName" class="invalid-feedback">Project name already used! Try another name</div>
+    </div>
+    <div class="mb-3">
+        <label for="task-desc" class="form-label">Description: </label>
+        <textarea class="form-control" id="task-desc" rows="5"></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="task-desc" class="form-label">Task for: </label>
+        <div class="form-check" *ngFor="let name of memberNames; let i = index">
+            <input class="form-check-input" type="checkbox" value="{{name}}" id="check-{{i}}">
+            <label class="form-check-label" for="check-{{i}}">
+            {{name}}
+            </label>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="addTask()">Save</button>
+</div>
+
+<div class="container">
+    <div class="row-auto">
+        <button class="btn btn-primary mb-3" id="add-task-btn" name="add-task-btn" data-bs-toggle="modal" data-bs-target="#add-task-modal">Add Task</button>
+    </div>
+    
     <div class="card">
         <div class="row mt-2">
             <div class="col">
@@ -42,4 +70,40 @@
         </div>
     </div>
 </div>
+
+<!-- Add-Task Modal -->
+<div class="modal fade" id="add-task-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Task Formular</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+                <label for="task-name" class="form-label">Task Name: </label>
+                <input type="text" class="form-control" id="task-name" aria-describedby="validationTaskName"/>
+                <div id="validationTaskName" class="invalid-feedback">Project name already used! Try another name</div>
+            </div>
+            <div class="mb-3">
+                <label for="task-desc" class="form-label">Description: </label>
+                <textarea class="form-control" id="task-desc" rows="5"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="task-desc" class="form-label">Task for: </label>
+                <div class="form-check" *ngFor="let name of memberNames; let i = index">
+                    <input class="form-check-input" type="checkbox" value="{{name}}" id="check-{{i}}">
+                    <label class="form-check-label" for="check-{{i}}">
+                    {{name}}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="addTask()" data-bs-dismiss="modal">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
 

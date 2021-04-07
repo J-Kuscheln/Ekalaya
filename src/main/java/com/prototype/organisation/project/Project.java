@@ -145,6 +145,9 @@ public class Project {
 		this.milestones = milestones;
 	}
 	
+	public Collection<Task> getTasks() {
+		return this.tasks;
+	}
 	public void addTask(Task task) {
 		this.tasks.add(task);
 	}

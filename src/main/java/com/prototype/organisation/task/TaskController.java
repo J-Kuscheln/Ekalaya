@@ -1,14 +1,18 @@
 package com.prototype.organisation.task;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +24,7 @@ import com.prototype.organisation.member.MemberService;
 import com.prototype.organisation.project.Project;
 import com.prototype.organisation.project.ProjectService;
 
+@CrossOrigin(origins = {"http://192.168.178.31:4200", "http://localhost:4200"})
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
@@ -31,7 +36,7 @@ public class TaskController {
 	@Autowired
 	private MemberService memberService;
 	
-	@RequestMapping()
+	@RequestMapping(method=RequestMethod.GET)
 	public List<Task> getAllTask(){ 
 		return service.getAllTask();
 	}
@@ -46,20 +51,34 @@ public class TaskController {
 		return null;
 	}
 	
+	/*
+	 * RequestBody Task task, @RequestHeader("PID") String projectId, 
+	 * @RequestHeader("UID") String userId, HttpServletRequest request
+	 */
+			
+	
 	@RequestMapping(method = RequestMethod.POST)
-	public HttpStatus addTask(@RequestBody Task task, HttpServletRequest request, @RequestHeader("PID") String projectId,
-			@RequestHeader("UID") String userId) {
+	public HttpStatus addTask(@RequestBody Task task, @RequestHeader("PID") String projectId, 
+			 @RequestHeader("UID") String userId){ 
+		
 		System.out.println("task name: " + task.getName());
 		System.out.println("projectId: " + projectId);
 		System.out.println("userId: " + userId);
 		
 		try {
-			//relate task with project
 			Project project = projectService.getProject(Long.valueOf(projectId));
+			
+			//check if the task name already exist in this project
+			Collection<Task> tasks = project.getTasks();
+			for(Task t : tasks) {
+				if(t.getName().equals(task.getName())) return HttpStatus.IM_USED;
+			}
+			
+			//relate task with project
 			task.setProject(project);
 			
 			//relate task with user
-			String[] userIds = userId.split(",");
+			String[] userIds = userId.split("&");
 			for(String Id : userIds) {
 				Member member = memberService.getMember(UUID.fromString(Id));
 				task.addMembers(member);
@@ -71,7 +90,6 @@ public class TaskController {
 			e.printStackTrace();
 			return HttpStatus.EXPECTATION_FAILED;
 		}
-		
 		
 		//Authorisation
 		/*
@@ -124,7 +142,7 @@ public class TaskController {
 	}
 	
 	//update
-	@RequestMapping(method = RequestMethod.PUT)
+	@RequestMapping(method = RequestMethod.PUT, path="/{id}")
 	public HttpStatus updateTask(@RequestBody Task task) {
 		return service.updateTask(task);
 	}
