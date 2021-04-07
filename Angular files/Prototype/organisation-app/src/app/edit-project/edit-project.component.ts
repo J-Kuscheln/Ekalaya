@@ -113,7 +113,11 @@ export class EditProjectComponent implements OnInit {
         button.className = "btn btn-primary";
         for(let i in this.project.tasks){
           let task:Task = this.project.tasks[i];
-          console.log(task.name);
+          console.log("Task name: ", task.name);
+          console.log("task Member: ")
+          for(let j in task.members){
+            console.log(task.members[j]);
+          }
         }
       })
     }

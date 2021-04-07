@@ -220,6 +220,9 @@ public class Member{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+	public Collection<Task> getTasks(){
+		return this.tasks;
+	}
 	public void addTask(Task task) {
 		this.tasks.add(task);
 	}

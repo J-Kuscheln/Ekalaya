@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.prototype.organisation.project.Project;
+import com.prototype.organisation.project.ProjectService;
+import com.prototype.organisation.task.Task;
+import com.prototype.organisation.task.TaskService;
 
 @CrossOrigin(origins = {"http://192.168.178.31:4200", "http://localhost:4200"})
 @RestController
@@ -30,6 +33,10 @@ public class MemberController {
 	
 	@Autowired
 	private MemberService service;
+	@Autowired
+	private ProjectService projectService;
+	@Autowired
+	private TaskService taskService;
 	
 	//get all members
 	@GetMapping
@@ -108,6 +115,30 @@ public class MemberController {
 	public HttpStatus deleteMember(@PathVariable String id) {
 		try {
 			UUID uuid = UUID.fromString(id);
+			Member member = service.getMember(uuid);
+			//remove relation as leader (remove the project)
+			for(Project project: member.getLeadedProjects()) {
+				for(Member memberProject : project.getProjectMembers()) {
+					memberProject.removeMemberProjects(project);
+					service.updateMember(memberProject);
+				}
+				for(Task task : project.getTasks()) {
+					taskService.removeTask(task.getId());
+				}
+				projectService.deleteProject(project.getId());
+			}
+			//remove relation as member of project
+			for(Project project: member.getMemberProjects()) {
+				project.removeProjectMember(member);
+				projectService.updateProject(project);
+			}
+			//remove task relation
+			for(Task task: member.getTasks()) {
+				task.removeMembers(member);
+				if(task.getMembers().size()==0) taskService.removeTask(task.getId());
+				else taskService.updateTask(task);
+			}
+			System.out.println("delete member");
 			return service.deleteMember(uuid);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

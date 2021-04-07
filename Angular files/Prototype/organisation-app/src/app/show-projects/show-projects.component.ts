@@ -214,7 +214,7 @@ export class ShowProjectsComponent implements OnInit {
       this.myProjects.forEach((myProject)=>{
         if (myProject.name == name) project = myProject;
       })
-      project.projectLeaders.forEach((leader)=>leader== this.id ? this.removeAsLeader(id, project) : this.removeAsMember(id))
+      project.projectLeaders.forEach((leader)=>leader== this.id ? this.removeProject(id) : this.removeAsMember(id))
     })
   }
 

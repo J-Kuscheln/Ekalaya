@@ -21,8 +21,9 @@ Currently running features:
 
 In progress:
 - Edit Project
+  - "for" bug --> need custom task JSON in project JSON
   - task due date
-  - fix relation if member/project is deleted !!! IMPORTANT
+  - task must have someone responsible for it!!!
 - Project details
   - Details Page
   - Member can only read the description

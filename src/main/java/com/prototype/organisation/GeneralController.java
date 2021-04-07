@@ -82,7 +82,6 @@ public class GeneralController {
 							break;
 						}
 					}
-					
 			}
 			memberService.updateMember(member);
 			projectService.updateProject(project);
