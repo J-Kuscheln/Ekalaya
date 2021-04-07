@@ -1,3 +1,4 @@
+import { Task } from './../task/Task';
 import { Member } from '../member/Member';
 
 export interface Project{
@@ -18,4 +19,5 @@ export interface Project{
     description: String;
     projectLeaders: String[];
     projectMembers: String[];
+    tasks:Task[];
 }

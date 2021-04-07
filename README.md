@@ -21,7 +21,6 @@ Currently running features:
 
 In progress:
 - Edit Project
-  - add task button
 - Project details
   - Details Page
   - Member can only read the description

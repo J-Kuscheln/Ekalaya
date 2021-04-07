@@ -6,13 +6,11 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,7 +39,7 @@ public class TaskController {
 		return service.getAllTask();
 	}
 	
-	@RequestMapping("/{id}")
+	@RequestMapping(method = RequestMethod.GET, path = "/{id}")
 	public Task getTask(@PathVariable int id, @RequestHeader("memberId") String memberId, HttpServletRequest request) {
 		Task task= service.getTask(id);
 		boolean isLoggedIn = request.getSession().getAttribute("USER_ID")!=null;
@@ -59,13 +57,16 @@ public class TaskController {
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public HttpStatus addTask(@RequestBody Task task, @RequestHeader("PID") String projectId, 
-			 @RequestHeader("UID") String userId){ 
+			 @RequestHeader("UID") String userId, HttpServletRequest request){ 
 		
 		System.out.println("task name: " + task.getName());
 		System.out.println("projectId: " + projectId);
 		System.out.println("userId: " + userId);
 		
-		try {
+		//Authorisation
+		
+		if(request.getSession().getAttribute("USER_ID")!=null) {
+			try {
 			Project project = projectService.getProject(Long.valueOf(projectId));
 			
 			//check if the task name already exist in this project
@@ -78,11 +79,14 @@ public class TaskController {
 			task.setProject(project);
 			
 			//relate task with user
-			String[] userIds = userId.split("&");
-			for(String Id : userIds) {
-				Member member = memberService.getMember(UUID.fromString(Id));
-				task.addMembers(member);
+			if(userId!="") {
+				String[] userIds = userId.split("&");
+				for(String Id : userIds) {
+					Member member = memberService.getMember(UUID.fromString(Id));
+					task.addMembers(member);
+				}
 			}
+			
 			
 			HttpStatus status = service.addTask(task);
 			return status;
@@ -90,20 +94,16 @@ public class TaskController {
 			e.printStackTrace();
 			return HttpStatus.EXPECTATION_FAILED;
 		}
-		
-		//Authorisation
-		/*
-		if(request.getSession().getAttribute("USER_ID")!=null) {
-			
 		}
 		return HttpStatus.UNAUTHORIZED;
-		*/
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
-	public HttpStatus removeTask(@PathVariable int id, @RequestHeader("id") String memberId) {
+	public HttpStatus removeTask(@PathVariable int id, @RequestHeader("id") String memberId
+			, HttpServletRequest request) {
 		Task task= service.getTask(id);
-		if(!isLeader(task, memberId)) return HttpStatus.UNAUTHORIZED;
+		boolean isLoggedIn = request.getSession().getAttribute("USER_ID")!=null;
+		if(!isLeader(task, memberId) && isLoggedIn) return HttpStatus.UNAUTHORIZED;
 		return service.removeTask(id);
 	}
 	

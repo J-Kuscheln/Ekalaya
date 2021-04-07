@@ -1,3 +1,4 @@
+import { Task } from './../task/Task';
 import { Member } from './../member/Member';
 import { Project } from './../project/Project';
 import { SessionService } from './../services/session.service';
@@ -13,6 +14,7 @@ import { Subscription } from 'rxjs';
 })
 export class EditProjectComponent implements OnInit {
   public loggedIn:boolean = false;
+  private memberId:string;
   @ViewChild("name")
   private name : ElementRef;
   @ViewChild("desc")
@@ -20,7 +22,7 @@ export class EditProjectComponent implements OnInit {
   @ViewChild("connection")
   private connection : ElementRef;
   
-  private project : Project;
+  public project : Project;
   private projectId : number;
   public memberNames : string[] = [];
   private memberIds : string[] = [];
@@ -44,11 +46,13 @@ export class EditProjectComponent implements OnInit {
 
     this.subscrip = this.service.myStatus$.subscribe(stat=>{
       if(stat!=null) {
+        this.memberId = stat;
         this.getProject(this.projectId)
         .then(resp=>{
           this.project=resp;
           if(this.project==null){
             this.goHome();
+            return;
           }
           
           this.isAuthorized(stat)
@@ -107,6 +111,10 @@ export class EditProjectComponent implements OnInit {
         this.desc.nativeElement.value = this.project.description;
         let button = document.getElementsByName("submit")[0];
         button.className = "btn btn-primary";
+        for(let i in this.project.tasks){
+          let task:Task = this.project.tasks[i];
+          console.log(task.name);
+        }
       })
     }
   }
@@ -179,12 +187,44 @@ export class EditProjectComponent implements OnInit {
       status: "on progress"
     }
 
-    //
+    
     fetch(url,{
       method:'post',
       credentials:'include',
       headers:{'Content-Type': 'application/json', 'PID':this.projectId.toString(), 'UID':headerUid},
       body:JSON.stringify(body)
+    })
+    .then(resp=>resp.json())
+    .then(resp=>{
+      if(resp=="OK"){
+        taskName.className = "form-control is-valid"
+        let closeBtn = <HTMLButtonElement> document.querySelector("#task-close-btn");
+        closeBtn.click();
+        location.reload();
+        return;
+      }
+      console.log(resp)
+      if(resp=="IM_USED"){
+        taskName.className = "form-control is-invalid"
+        return;
+      }
+      if(resp=="EXPECTATION_FAILED"){
+        //todo
+      }
+    });
+  }
+
+  removeTask(taskId:number){
+    let url = this.baseUrl + "/tasks/" + taskId;
+    let requestHeader = {"id":this.memberId};
+
+    fetch(url,{
+      headers:requestHeader,
+      method:'delete',
+      credentials:'include'
+    }).then(resp=>resp.json())
+    .then(resp=>{
+      if(resp=="OK") location.reload();
     })
   }
 }
