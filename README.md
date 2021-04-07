@@ -21,6 +21,8 @@ Currently running features:
 
 In progress:
 - Edit Project
+  - task due date
+  - fix relation if member/project is deleted !!! IMPORTANT
 - Project details
   - Details Page
   - Member can only read the description
