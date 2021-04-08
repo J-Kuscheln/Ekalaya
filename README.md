@@ -22,7 +22,6 @@ Currently running features:
 In progress:
 - Edit Project
   - task due date
-  - task must have someone responsible for it!!!
 - Project details
   - Details Page
   - Member can only read the description

@@ -201,6 +201,10 @@ export class EditProjectComponent implements OnInit {
         responsible.push(this.memberIds[i]);
       }
     }
+
+    if(!this.taskFormInputValidation(responsible, taskName)) return;
+
+
     let headerUid = "";
     for(let i in responsible){
       headerUid += responsible[i];
@@ -233,13 +237,32 @@ export class EditProjectComponent implements OnInit {
       }
       console.log(resp)
       if(resp=="IM_USED"){
-        taskName.className = "form-control is-invalid"
+        taskName.className = "form-control is-invalid";
+        document.querySelector("#validationTaskName").textContent = "Project name already used! Try another name";
         return;
       }
       if(resp=="EXPECTATION_FAILED"){
         //todo
       }
     });
+  }
+
+  taskFormInputValidation(responsible:string[], taskName:HTMLInputElement){
+    let result = true;
+    document.querySelector(".warning-text#responsible").setAttribute("style","display:none");
+    taskName.className = "form-control";
+    if(responsible.length==0){
+      document.querySelector(".warning-text#responsible").setAttribute("style","color:red");
+      result = false;
+    }
+
+    if(taskName.value==""){
+      taskName.className = "form-control is-invalid";
+      document.querySelector("#validationTaskName").textContent = "Please fill the name field"; 
+      result = false;
+    }
+
+    return result;
   }
 
   removeTask(taskId:number){
@@ -255,4 +278,14 @@ export class EditProjectComponent implements OnInit {
       if(resp=="OK") location.reload();
     })
   }
+
+  selectAll(){
+    let selectAllBtn = <HTMLInputElement> document.querySelector("#select-all");
+    for(let i in this.memberNames){
+      let checkBox = <HTMLInputElement>document.querySelector("#check-"+i);
+      checkBox.checked = selectAllBtn.checked;
+    }
+  }
+
+  
 }
