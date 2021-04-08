@@ -26,6 +26,8 @@ export class EditProjectComponent implements OnInit {
   private projectId : number;
   public memberNames : string[] = [];
   private memberIds : string[] = [];
+  public tasks : Task[] = [];
+  public tasksMemberNames : Array<string[]> = [];
 
   private baseUrl = environment.apiBaseUrl;
   private subscrip : Subscription;
@@ -111,14 +113,27 @@ export class EditProjectComponent implements OnInit {
         this.desc.nativeElement.value = this.project.description;
         let button = document.getElementsByName("submit")[0];
         button.className = "btn btn-primary";
+        
         for(let i in this.project.tasks){
-          let task:Task = this.project.tasks[i];
-          console.log("Task name: ", task.name);
-          console.log("task Member: ")
-          for(let j in task.members){
-            console.log(task.members[j]);
-          }
+          this.getTask(this.project.tasks[i])
+          .then((task)=>{
+            console.log(task);
+            this.tasks.push(task);
+            console.log("Task name: ", task.name);
+            console.log("task Member: ")
+            
+            let names : string[] = [];
+            for(let j in task.members){
+              
+              console.log("member id: ", task.members[j]);
+              this.getMember(task.members[j]).then(resp=>names.push(resp.firstName + " " + resp.lastName));
+              
+            }
+            this.tasksMemberNames.push(names);
+            
+          });
         }
+        
       })
     }
   }
@@ -136,10 +151,19 @@ export class EditProjectComponent implements OnInit {
     }
   }
 
-  getProject(id:number){
+  getProject(id:number):Promise<Project>{
     let url = this.baseUrl + "/projects/" + id;
     return fetch(url,{credentials:'include'}).then(resp=>resp.json()).then(data=>data);
   }
+
+  getTask(id:number):Promise<Task>{
+    let url = this.baseUrl + "/tasks/" + id;
+    let header = {"id":this.memberId};
+    
+    return fetch(url,{credentials:'include', headers:header})
+    .then(resp=>resp.json()).then(data=>data);
+  }
+
   update(){
     let body = {
       name:this.name.nativeElement.value,

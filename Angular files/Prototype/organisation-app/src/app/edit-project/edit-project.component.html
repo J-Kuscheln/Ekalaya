@@ -24,7 +24,7 @@
         <button class="btn btn-primary mb-3" id="add-task-btn" name="add-task-btn" data-bs-toggle="modal" data-bs-target="#add-task-modal">Add Task</button>
     </div>
 
-    <div class="card" *ngFor="let task of project.tasks">
+    <div class="card" *ngFor="let task of tasks; let i = index">
         <div class="row mt-2">
             <div class="col">
                 <h3 class="task-title">{{task.name}}</h3>
@@ -43,8 +43,8 @@
         <div class="row mt-2">
             <div class="col-12 mb-3">
                 <span class="task-owner"><b>For: </b> 
-                    <span *ngFor="let member of task.members; let i = index">{{member.firstName}} {{member.lastName}}
-                        <span *ngIf="i != task.members.length-1">, </span>
+                    <span *ngFor="let member of tasksMemberNames[i]; let j = index"> {{member}}
+                        <span *ngIf="j != task.members.length-1">, </span>
                     </span>
                 </span> <br>
                 <span class="task-owner "><b>Due date:</b> {{task.dueDate}}</span>

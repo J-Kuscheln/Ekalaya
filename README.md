@@ -21,7 +21,6 @@ Currently running features:
 
 In progress:
 - Edit Project
-  - "for" bug --> need custom task JSON in project JSON
   - task due date
   - task must have someone responsible for it!!!
 - Project details

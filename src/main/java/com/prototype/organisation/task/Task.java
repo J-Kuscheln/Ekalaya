@@ -16,6 +16,9 @@ import javax.persistence.ManyToOne;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.prototype.organisation.CustomMembersSerializer;
+import com.prototype.organisation.CustomProjectSerializer;
 import com.prototype.organisation.member.Member;
 import com.prototype.organisation.project.Project;
 
@@ -23,7 +26,7 @@ import com.prototype.organisation.project.Project;
 public class Task {
 	@Id
 	@Column(nullable = false, unique = true, updatable = false)
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String name;
 	private String description;
@@ -33,8 +36,10 @@ public class Task {
 	@LastModifiedDate
 	private Date modifiedDate = new Date();
 	private Date dueDate = new Date();
+	@JsonSerialize(using = CustomProjectSerializer.class)
 	@ManyToOne()
 	private Project project; 
+	@JsonSerialize(using = CustomMembersSerializer.class)
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Collection<Member> members = new ArrayList<>();
 	

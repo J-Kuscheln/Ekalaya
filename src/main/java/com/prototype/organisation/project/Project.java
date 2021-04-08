@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.prototype.organisation.CustomMembersSerializer;
+import com.prototype.organisation.CustomTasksSerializer;
 import com.prototype.organisation.member.Member;
 import com.prototype.organisation.milestone.Milestone;
 import com.prototype.organisation.task.Task;
@@ -31,7 +32,7 @@ import com.prototype.organisation.task.Task;
 public class Project {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(updatable = false, nullable = false)
 	private long id;
 	private String name;
@@ -55,6 +56,8 @@ public class Project {
 	private Collection<Member> projectMembers = new ArrayList<>();
 	@Embedded
 	private Collection<Milestone> milestones = new ArrayList<>();
+	
+	@JsonSerialize(using = CustomTasksSerializer.class)
 	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
 	private Collection<Task> tasks = new ArrayList<>();
 	

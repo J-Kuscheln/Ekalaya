@@ -39,16 +39,19 @@ public class TaskController {
 		return service.getAllTask();
 	}
 	
-	//@RequestHeader("memberId") String memberId, HttpServletRequest request
+	//
 	@RequestMapping(method = RequestMethod.GET, path = "/{id}")
-	public Task getTask(@PathVariable int id) {
+	public Task getTask(@PathVariable int id, @RequestHeader("Id") String memberId, HttpServletRequest request) {
 		Task task= service.getTask(id);
-		//boolean isLoggedIn = request.getSession().getAttribute("USER_ID")!=null;
+		boolean isLoggedIn = request.getSession().getAttribute("USER_ID")!=null;
+		System.out.println("is logged in: " + isLoggedIn);
 		//should add if logged in *later
-		//if(isMemberRegistered(task,memberId) && isLoggedIn) return task;
+		if((isMemberRegistered(task,memberId)||isLeader(task, memberId)) && isLoggedIn) {
+			System.out.println("returning task");
+			return task;
+		}
 
-		//return null;
-		return task;
+		return null;
 	}
 	
 	/*

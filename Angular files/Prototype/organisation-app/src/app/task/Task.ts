@@ -8,5 +8,5 @@ export interface Task{
     modifiedDate:Date;
     dueDate:Date;
     project:string;
-    members:Member[];
+    members:string[];
 }

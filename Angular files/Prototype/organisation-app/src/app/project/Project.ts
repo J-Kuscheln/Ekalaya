@@ -19,5 +19,5 @@ export interface Project{
     description: String;
     projectLeaders: String[];
     projectMembers: String[];
-    tasks:Task[];
+    tasks:number[];
 }
