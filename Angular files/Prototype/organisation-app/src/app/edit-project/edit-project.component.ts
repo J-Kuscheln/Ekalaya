@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
+import { FormGroup, FormControl} from '@angular/forms'
 
 @Component({
   selector: 'app-edit-project',
@@ -31,7 +32,14 @@ export class EditProjectComponent implements OnInit {
 
   private baseUrl = environment.apiBaseUrl;
   private subscrip : Subscription;
-  constructor(private router:Router, private service:SessionService) { }
+  public taskForm:FormGroup;
+  constructor(private router:Router, private service:SessionService) {
+    this.taskForm = new FormGroup({
+      taskName: new FormControl(''),
+      taskDescription: new FormControl(''),
+      taskSelectAll : new FormControl()
+    })
+  }
 
   ngOnInit(): void {
     let urlSplit = this.router.url.split("/");
@@ -118,9 +126,9 @@ export class EditProjectComponent implements OnInit {
           this.getTask(this.project.tasks[i])
           .then((task)=>{
             console.log(task);
+            task.description = task.description.replaceAll("\\n", "<br>");
             this.tasks.push(task);
             console.log("Task name: ", task.name);
-            console.log("task Member: ")
             
             let names : string[] = [];
             for(let j in task.members){
@@ -156,7 +164,7 @@ export class EditProjectComponent implements OnInit {
     return fetch(url,{credentials:'include'}).then(resp=>resp.json()).then(data=>data);
   }
 
-  getTask(id:number):Promise<Task>{
+  getTask(id:number){
     let url = this.baseUrl + "/tasks/" + id;
     let header = {"id":this.memberId};
     
@@ -187,13 +195,25 @@ export class EditProjectComponent implements OnInit {
     });
   }
 
+  taskDescReform(taskDesc:string){
+    //let desc:string[] = [];
+    let desc:string = "";
+    for (let i=0;i<taskDesc.length;i++){
+      if (taskDesc[i] == '\n') desc += '\\n';
+      else desc+=(taskDesc[i]);
+    }
+    return desc;
+  }
+
   addTask(){
     console.log("ADD TASK!");
     let taskName = <HTMLInputElement> document.getElementById("task-name");
-    let taskDesc = <HTMLInputElement> document.querySelector("#task-desc");
+    //let taskDesc = <HTMLInputElement> document.querySelector("#task-desc");
     let responsible:string[] = [];
-    console.log("task name: ",taskName.value);
-    console.log("task desc: ",taskDesc.value);
+    //console.log("task name: ",taskName.value);
+    //console.log("task desc: ",taskDesc.value);
+    console.log("task name: ",this.taskForm.value.taskName);
+    console.log("task name: ",this.taskForm.value.taskDescription);
 
     for(let i in this.memberNames){
       let checkBox = <HTMLInputElement>document.querySelector("#check-"+i);
@@ -201,10 +221,10 @@ export class EditProjectComponent implements OnInit {
         responsible.push(this.memberIds[i]);
       }
     }
-
+    
     if(!this.taskFormInputValidation(responsible, taskName)) return;
 
-
+    
     let headerUid = "";
     for(let i in responsible){
       headerUid += responsible[i];
@@ -215,7 +235,7 @@ export class EditProjectComponent implements OnInit {
     let url = this.baseUrl+"/tasks";
     let body = {
       name: taskName.value,
-      description: taskDesc.value,
+      description: this.taskDescReform(this.taskForm.value.taskDescription),
       status: "on progress"
     }
 
@@ -245,6 +265,7 @@ export class EditProjectComponent implements OnInit {
         //todo
       }
     });
+    
   }
 
   taskFormInputValidation(responsible:string[], taskName:HTMLInputElement){
