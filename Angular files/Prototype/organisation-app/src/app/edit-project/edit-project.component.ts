@@ -37,7 +37,7 @@ export class EditProjectComponent implements OnInit {
     this.taskForm = new FormGroup({
       taskName: new FormControl(''),
       taskDescription: new FormControl(''),
-      taskSelectAll : new FormControl()
+      dueDate : new FormControl()
     })
   }
 
@@ -125,15 +125,12 @@ export class EditProjectComponent implements OnInit {
         for(let i in this.project.tasks){
           this.getTask(this.project.tasks[i])
           .then((task)=>{
-            console.log(task);
             task.description = task.description.replaceAll("\\n", "<br>");
+            task.dueDate = task.dueDate!=null? new Date(task.dueDate).toDateString() : "-";
             this.tasks.push(task);
-            console.log("Task name: ", task.name);
             
             let names : string[] = [];
             for(let j in task.members){
-              
-              console.log("member id: ", task.members[j]);
               this.getMember(task.members[j]).then(resp=>names.push(resp.firstName + " " + resp.lastName));
               
             }
@@ -196,13 +193,12 @@ export class EditProjectComponent implements OnInit {
   }
 
   taskDescReform(taskDesc:string){
-    //let desc:string[] = [];
-    let desc:string = "";
+    let desc:string[] = [];
     for (let i=0;i<taskDesc.length;i++){
-      if (taskDesc[i] == '\n') desc += '\\n';
-      else desc+=(taskDesc[i]);
+      if (taskDesc[i] == '\n') desc.push('\\n');
+      else desc.push(taskDesc[i]);
     }
-    return desc;
+    return desc.join("");
   }
 
   addTask(){
@@ -214,6 +210,7 @@ export class EditProjectComponent implements OnInit {
     //console.log("task desc: ",taskDesc.value);
     console.log("task name: ",this.taskForm.value.taskName);
     console.log("task name: ",this.taskForm.value.taskDescription);
+    console.log("due date: ", this.taskForm.value.dueDate);
 
     for(let i in this.memberNames){
       let checkBox = <HTMLInputElement>document.querySelector("#check-"+i);
@@ -234,8 +231,9 @@ export class EditProjectComponent implements OnInit {
 
     let url = this.baseUrl+"/tasks";
     let body = {
-      name: taskName.value,
+      name: this.taskForm.value.taskName,
       description: this.taskDescReform(this.taskForm.value.taskDescription),
+      dueDate: this.taskForm.value.dueDate,
       status: "on progress"
     }
 

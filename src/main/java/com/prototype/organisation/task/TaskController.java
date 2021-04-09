@@ -61,12 +61,13 @@ public class TaskController {
 			
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public HttpStatus addTask(@RequestBody Task task, @RequestHeader("PID") String projectId, 
+	public HttpStatus createTask(@RequestBody Task task, @RequestHeader("PID") String projectId, 
 			 @RequestHeader("UID") String userId, HttpServletRequest request){ 
 		
 		System.out.println("task name: " + task.getName());
 		System.out.println("projectId: " + projectId);
 		System.out.println("userId: " + userId);
+		System.out.println("duedate: " + task.getDueDate());
 		
 		//Authorisation
 		

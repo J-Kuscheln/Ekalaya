@@ -89,12 +89,12 @@ export class NewProjectComponent implements OnInit {
   }
 
   reformDesc(description:string){
-    let desc:string = "";
+    let desc:string[] = [];
     for (let i=0;i<description.length;i++){
-      if (description[i] == '\n') desc += '\\n';
-      else desc += this.description.nativeElement.value[i];
+      if (description[i] == '\n') desc.push('\\n');
+      else desc.push(this.description.nativeElement.value[i]);
     }
-    return desc;
+    return desc.join("");
   }
 
   getProjectId(name:string){

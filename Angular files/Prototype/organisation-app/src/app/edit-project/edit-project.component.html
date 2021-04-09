@@ -24,7 +24,7 @@
         <button class="btn btn-primary mb-3" id="add-task-btn" name="add-task-btn" data-bs-toggle="modal" data-bs-target="#add-task-modal">Add Task</button>
     </div>
 
-    <div class="card" *ngFor="let task of tasks; let i = index">
+    <div class="card mb-3" *ngFor="let task of tasks; let i = index">
         <div class="row mt-2">
             <div class="col">
                 <h3 class="task-title">{{task.name}}</h3>
@@ -77,9 +77,13 @@
                     <textarea class="form-control" id="task-desc" rows="5" formControlName="taskDescription"></textarea>
                 </div>
                 <div class="mb-3">
+                    <label for="task-due-date-form" class="form-label">Due Date: </label>
+                    <input type="date" class="form-control" id="task-due-Date-form" formControlName="dueDate">
+                </div>
+                <div class="mb-3">
                     <label for="task-desc" class="form-label">Task for: </label>
                     <div class="form-check mb-3">
-                        <input type="checkbox" id="select-all" class="form-check-input" (click)="selectAll()" formControlName="taskSelectAll">
+                        <input type="checkbox" id="select-all" class="form-check-input" (click)="selectAll()">
                         <label class="form-check-label" for="select-all">Select all</label>
                     </div>
                     <div class="form-check" *ngFor="let name of memberNames; let i = index">

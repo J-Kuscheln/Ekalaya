@@ -16,12 +16,13 @@ Currently running features:
 - Relate User as member of a project
 - Remove project
 - Edit profile
+  - add/remove task
 - Remove Account
 
 
 In progress:
 - Edit Project
-  - task due date
+  - task update
 - Project details
   - Details Page
   - Member can only read the description

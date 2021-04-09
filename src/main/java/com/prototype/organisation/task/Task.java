@@ -38,7 +38,8 @@ public class Task {
 	private Date createdDate = new Date();
 	@LastModifiedDate
 	private Date modifiedDate = new Date();
-	private Date dueDate = new Date();
+	@Column(nullable=true)
+	private Date dueDate;
 	@JsonSerialize(using = CustomProjectSerializer.class)
 	@ManyToOne()
 	private Project project; 
