@@ -59,15 +59,16 @@ export class EditProjectComponent implements OnInit {
         this.memberId = stat;
         this.getProject(this.projectId)
         .then(resp=>{
-          this.project=resp;
+          
           if(this.project==null){
             this.goHome();
             return;
           }
           
-          this.isAuthorized(stat)
+          this.isAuthorized(this.memberId,resp)
           .then(authorized=>{
             if(authorized){
+              this.project=resp;
               this.loggedIn=true;
               this.main();
             }else{
@@ -90,12 +91,12 @@ export class EditProjectComponent implements OnInit {
     }
   }
 
-  isAuthorized(memberId:string):Promise<boolean>{
+  isAuthorized(memberId:string, project:Project):Promise<boolean>{
     let member:Member;
     return this.getMember(memberId).then(m=>{
       member=m;
-      for(let i in this.project.projectLeaders){
-        if(memberId==this.project.projectLeaders[i]) return true;
+      for(let i in project.projectLeaders){
+        if(memberId==project.projectLeaders[i]) return true;
       }
       return false;
     });

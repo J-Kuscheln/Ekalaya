@@ -34,7 +34,7 @@ export class SessionService {
     return fetch(this.baseUrl+"/auth/session",{credentials:'include'}).then(response=>response.json())
     .then(async data=>{
       if(data["USER_ID"]!=null){
-        console.log(data["USER_ID"]);
+        //console.log(data["USER_ID"]);
         let data2 = await this.getUserInfo(data["USER_ID"])
         this.myUserName(data2.firstName, data2.lastName);
         return this.myStatus(data["USER_ID"]);
@@ -46,7 +46,7 @@ export class SessionService {
   }
 
   async getUserInfo(id:string){
-    console.log("get User Info...")
+    //console.log("get User Info...")
     return fetch(this.baseUrl+"/members/"+id,{credentials:'include'}).then(response=>response.json())
     .then(data=>data);
   }
