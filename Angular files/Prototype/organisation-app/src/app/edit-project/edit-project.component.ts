@@ -60,7 +60,7 @@ export class EditProjectComponent implements OnInit {
         this.getProject(this.projectId)
         .then(resp=>{
           
-          if(this.project==null){
+          if(resp==null){
             this.goHome();
             return;
           }
