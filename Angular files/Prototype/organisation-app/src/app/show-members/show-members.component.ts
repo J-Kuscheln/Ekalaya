@@ -3,6 +3,8 @@ import { SessionService } from '../services/session.service';
 import { Member } from './../member/Member';
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { ITS_JUST_ANGULAR } from '@angular/core/src/r3_symbols';
+import { isGeneratedFile } from '@angular/compiler/src/aot/util';
 
 @Component({
   selector: 'app-show-members',
@@ -17,17 +19,18 @@ export class ShowMembersComponent implements OnInit {
     this.members = [];
   }
   
-  ngOnInit(): void {
-    this.getDataMember();
+  async ngOnInit(): Promise<void> {
+    await this.getDataMember();
     this.subscrip = this.session.myStatus$.subscribe();
     this.session.checkSession();
+    this.displayAnimation();
   }
   ngOnDestroy(){
     this.subscrip.unsubscribe();
   }
 
-  getDataMember(){
-    fetch(this.baseUrl+"/members",{credentials:'include'}).then(Response=>Response.json()
+  async getDataMember(){
+    await fetch(this.baseUrl+"/members",{credentials:'include'}).then(Response=>Response.json()
     .then(dataArray=>{
       this.members = dataArray;
       this.members.forEach(member=>{
@@ -50,4 +53,26 @@ export class ShowMembersComponent implements OnInit {
       })
     .catch(() => { console.log("fail to fetch"); return "error";});
     }
+
+  displayAnimation(){
+    let counter = 0;
+    let checkExist = setInterval(()=>{
+      if(document.getElementsByClassName("card animated").length){
+        let i = 0;
+        let animate = setInterval(()=>{
+          if(!document.getElementsByClassName("card animated").item(i)) clearInterval(animate);
+          else{
+            document.getElementsByClassName("card animated").item(i).setAttribute("style", "transform:translateY(0%); opacity:100");
+            i++;
+          }
+        },100)
+          
+        clearInterval(checkExist);
+      }
+      if(counter==10){
+        clearInterval(checkExist);
+      }
+      counter += 1;
+    },100)
+  }
 }
