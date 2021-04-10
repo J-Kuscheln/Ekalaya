@@ -3,8 +3,6 @@ import { SessionService } from '../services/session.service';
 import { Member } from './../member/Member';
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ITS_JUST_ANGULAR } from '@angular/core/src/r3_symbols';
-import { isGeneratedFile } from '@angular/compiler/src/aot/util';
 
 @Component({
   selector: 'app-show-members',
