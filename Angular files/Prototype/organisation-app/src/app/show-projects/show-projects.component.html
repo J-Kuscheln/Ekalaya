@@ -73,7 +73,7 @@
                     </p>
                     
                     <ul style="list-style-type:none;">
-                        <li *ngFor="let member of project.projectMembers"> <div id="{{project.id.toString() + member}}">loading...</div> </li>
+                        <li *ngFor="let member of project.projectMembers"> <div id="{{project.id.toString() + member}}"> {{member}}</div> </li>
                     </ul>
                 </div>
 

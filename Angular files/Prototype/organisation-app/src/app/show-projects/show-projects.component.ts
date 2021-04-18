@@ -51,44 +51,53 @@ export class ShowProjectsComponent implements OnInit {
     .then(data=>{
       data.forEach(project => {
         project.description = project.description.replaceAll('\n', "<br>");
-        if(project.projectLeaders.length>0){
-          let decided = false
-          for(let index in project.projectLeaders){
-            if(<string>project.projectLeaders[index] == this.id){
+
+        console.log("project name: ", project.name);
+
+        console.log("Leaders: ", project.projectLeaders.length)
+
+        let decided = false
+        for(let index in project.projectLeaders){
+          console.log(project.projectLeaders[index])
+          console
+          if(<string>project.projectLeaders[index] == this.id){
+            this.myProjects.push(project);
+            decided = true
+            break;
+          }
+        }
+        if(!decided){
+          console.log("member: ")
+          for(let index in project.projectMembers){
+            console.log(project.projectMembers[index]);
+            if(<string>project.projectMembers[index] == this.id){
               this.myProjects.push(project);
               decided = true
               break;
             }
           }
-          if(!decided){
-            for(let index in project.projectMembers){
-              if(<string>project.projectMembers[index] == this.id){
-                this.myProjects.push(project);
-                decided = true
-                break;
-              }
-            }
-            if(!decided)this.projects.push(project);
-          }
+          if(!decided)this.projects.push(project);
+        }
           
-        }else this.projects.push(project);
+        else this.projects.push(project);
         
       });
+      
       this.projects.forEach(project => {
         for(let index in project.projectLeaders){
-          this.updateMemberName(project.projectLeaders[index]).then(str=>this.updateMemberDOM(<number> project.id, <string>project.projectLeaders[index], str))
+          this.getMemberName(project.projectLeaders[index]).then(str=>this.updateMemberDOM(<number> project.id, <string>project.projectLeaders[index], str))
         }
         for(let member in project.projectMembers){
-          this.updateMemberName(project.projectMembers[member]).then(t=>this.updateMemberDOM(<number> project.id, <string>project.projectMembers[member], t))
+          this.getMemberName(project.projectMembers[member]).then(t=>this.updateMemberDOM(<number> project.id, <string>project.projectMembers[member], t))
         }
       })
 
       this.myProjects.forEach(project => {
         for(let index in project.projectLeaders){
-          this.updateMemberName(project.projectLeaders[index]).then(str=>this.updateMemberDOM(<number> project.id, <string>project.projectLeaders[index], str))
+          this.getMemberName(project.projectLeaders[index]).then(str=>this.updateMemberDOM(<number> project.id, <string>project.projectLeaders[index], str))
         }
         for(let member in project.projectMembers){
-          this.updateMemberName(project.projectMembers[member]).then(t=>this.updateMemberDOM(<number> project.id, <string>project.projectMembers[member], t))
+          this.getMemberName(project.projectMembers[member]).then(t=>this.updateMemberDOM(<number> project.id, <string>project.projectMembers[member], t))
         }
       })
       
@@ -115,7 +124,7 @@ export class ShowProjectsComponent implements OnInit {
     .then(data=>data)
   }
 
-  updateMemberName(id:String){
+  getMemberName(id:String){
     let url = this.baseUrl+"/members/" + id;
     return fetch(url,{credentials:'include'})
     .then(response=>response.json())
@@ -144,6 +153,8 @@ export class ShowProjectsComponent implements OnInit {
   }
 
   removeAsMember(id:number){
+    console.log("debug remove as member")
+
     let requestBody = `{"memberId":"`+ this.id +`",
     "projectId":`+ id +`,
     "toDo":"removeAsMember"
@@ -211,9 +222,13 @@ export class ShowProjectsComponent implements OnInit {
 
     body.textContent = "Are you sure want to remove the project \"" + name +  "\"?";
     removeBtn.addEventListener('click',()=>{
+      
       this.myProjects.forEach((myProject)=>{
         if (myProject.name == name) project = myProject;
       })
+
+      if(project.projectLeaders.length < 1) this.removeAsMember(id)
+
       project.projectLeaders.forEach((leader)=>leader== this.id ? this.removeProject(id) : this.removeAsMember(id))
     })
   }

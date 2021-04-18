@@ -22,11 +22,11 @@ import com.prototype.organisation.member.MemberService;
 import com.prototype.organisation.project.Project;
 import com.prototype.organisation.project.ProjectService;
 
-@CrossOrigin(origins = {"http://192.168.178.31:4200", "http://localhost:4200"})
+
+@CrossOrigin
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
-	
 	@Autowired
 	private TaskService service;
 	@Autowired
@@ -40,6 +40,7 @@ public class TaskController {
 	}
 	
 	//
+
 	@RequestMapping(method = RequestMethod.GET, path = "/{id}")
 	public Task getTask(@PathVariable int id, @RequestHeader("Id") String memberId, HttpServletRequest request) {
 		Task task= service.getTask(id);
@@ -104,6 +105,7 @@ public class TaskController {
 		return HttpStatus.UNAUTHORIZED;
 	}
 	
+
 	@RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
 	public HttpStatus removeTask(@PathVariable int id, @RequestHeader("id") String memberId
 			, HttpServletRequest request) {
@@ -113,6 +115,7 @@ public class TaskController {
 		return service.removeTask(id);
 	}
 	
+
 	@RequestMapping(path = "/Project/{projectId}")
 	public List<Task> getTaskInProject(@PathVariable long projectId){
 		try {

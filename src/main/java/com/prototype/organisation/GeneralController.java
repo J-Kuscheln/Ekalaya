@@ -17,7 +17,7 @@ import com.prototype.organisation.member.MemberService;
 import com.prototype.organisation.project.Project;
 import com.prototype.organisation.project.ProjectService;
 
-@CrossOrigin(origins = {"http://192.168.178.31:4200","http://localhost:4200"})
+@CrossOrigin
 @RestController
 public class GeneralController {
 	@Autowired
@@ -35,7 +35,7 @@ public class GeneralController {
 		return "index";
 	}
 	
-	
+	@CrossOrigin
 	@RequestMapping(method = RequestMethod.POST,value = "/relate")
 	//@RequestParam(name="memberId") String memberId, @RequestParam(name="projectId") long projectId, @RequestParam(name="toDo") String toDo
 	public HttpStatus relate(@RequestBody RelateObjects body) {

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = {"http://192.168.178.31:4200", "http://localhost:4200"})
+@CrossOrigin
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -23,7 +23,6 @@ public class AuthController {
 	public boolean login(@RequestBody Auth body, HttpServletRequest http) {
 		return service.login(body, http);
 	}
-	
 	
 	@GetMapping("/session")
 	public String checkSession(HttpServletRequest http, HttpServletResponse response, @CookieValue(value = "SESSION", defaultValue = "default") String testCookie) {

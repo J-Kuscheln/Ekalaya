@@ -21,7 +21,7 @@ import com.prototype.organisation.member.MemberService;
 import com.prototype.organisation.task.Task;
 import com.prototype.organisation.task.TaskService;
 
-@CrossOrigin(origins = {"http://192.168.178.31:4200","http://localhost:4200"})
+@CrossOrigin
 @RestController
 @RequestMapping("/projects")
 public class ProjectController {
