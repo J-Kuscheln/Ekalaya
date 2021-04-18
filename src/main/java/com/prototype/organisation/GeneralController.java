@@ -35,7 +35,7 @@ public class GeneralController {
 		return "index";
 	}
 	
-	@CrossOrigin
+
 	@RequestMapping(method = RequestMethod.POST,value = "/relate")
 	//@RequestParam(name="memberId") String memberId, @RequestParam(name="projectId") long projectId, @RequestParam(name="toDo") String toDo
 	public HttpStatus relate(@RequestBody RelateObjects body) {
