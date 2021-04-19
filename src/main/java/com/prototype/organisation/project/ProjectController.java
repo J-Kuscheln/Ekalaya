@@ -1,7 +1,9 @@
 package com.prototype.organisation.project;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +41,19 @@ public class ProjectController {
 	}
 	
 	@GetMapping("/{id}")
-	public Project getProject(@PathVariable long id) {
-		return service.getProject(id);
+	public Project getProject(@PathVariable long id, HttpServletRequest request) {
+		try{
+			// add authentification here! (for task data)
+			
+			Project project =  service.getProject(id);
+			if(!isLoggedIn(request)) project.setTask(null);
+			
+			return project;
+			
+		}catch(Exception e) {
+			Project emptyProject = new Project();
+			return emptyProject;
+		}
 	}
 	
 	@GetMapping("/name/{name}")
@@ -98,5 +111,10 @@ public class ProjectController {
 		}
 		
 		return service.deleteProject(id);
+	}
+	
+	private boolean isLoggedIn(HttpServletRequest request) {
+		if(request.getSession().getAttribute("USER_ID")==null) return false;
+		return true;
 	}
 }

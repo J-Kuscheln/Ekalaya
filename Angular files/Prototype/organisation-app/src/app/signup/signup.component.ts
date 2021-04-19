@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { HashService } from '../services/hash.service';
 import { environment } from './../../environments/environment';
 import { SessionService } from '../services/session.service';
@@ -36,19 +37,25 @@ export class SignupComponent implements OnInit {
   pass:ElementRef
   @ViewChild("passwordValidator")
   passValidator:ElementRef
+  
   private baseUrl = environment.apiBaseUrl
+  private subs:Subscription;
+
   constructor(private router: Router, private session:SessionService, private hashService:HashService) {
     
    }
 
   ngOnInit(): void {
-    this.session.myStatus$
+    this.subs = this.session.myStatus$
     .subscribe(sessionStat=>{
       if(sessionStat!=null){
         this.router.navigate(["/"]);
       }
     })
-    .unsubscribe;
+    this.session.checkSession();
+  }
+  ngOnDestroy(){
+    this.subs.unsubscribe();
   }
 
   submitForm(){

@@ -155,6 +155,10 @@ public class Project {
 		this.tasks.add(task);
 	}
 	
+	public void setTask(Collection<Task> tasks) {
+		this.tasks = tasks;
+	}
+	
 	public void removeTask(Task task) {
 		this.tasks.remove(task);
 	}

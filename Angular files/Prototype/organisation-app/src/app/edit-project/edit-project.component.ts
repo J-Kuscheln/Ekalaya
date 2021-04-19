@@ -164,9 +164,8 @@ export class EditProjectComponent implements OnInit {
 
   getTask(id:number){
     let url = this.baseUrl + "/tasks/" + id;
-    let header = {"id":this.memberId};
     
-    return fetch(url,{credentials:'include', headers:header})
+    return fetch(url,{credentials:'include'})
     .then(resp=>resp.json()).then(data=>data);
   }
 
@@ -203,15 +202,9 @@ export class EditProjectComponent implements OnInit {
   }
 
   addTask(){
-    console.log("ADD TASK!");
     let taskName = <HTMLInputElement> document.getElementById("task-name");
-    //let taskDesc = <HTMLInputElement> document.querySelector("#task-desc");
     let responsible:string[] = [];
-    //console.log("task name: ",taskName.value);
-    //console.log("task desc: ",taskDesc.value);
-    console.log("task name: ",this.taskForm.value.taskName);
-    console.log("task name: ",this.taskForm.value.taskDescription);
-    console.log("due date: ", this.taskForm.value.dueDate);
+
 
     for(let i in this.memberNames){
       let checkBox = <HTMLInputElement>document.querySelector("#check-"+i);

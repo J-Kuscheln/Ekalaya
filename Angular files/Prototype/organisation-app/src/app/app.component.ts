@@ -21,6 +21,7 @@ export class AppComponent implements OnInit{
   constructor(private session:SessionService, public router: Router){}
   
   ngOnInit(){
+
     this.session.myUserLastName$
     .subscribe(resp=>this.userLastName=resp)
     
@@ -29,7 +30,6 @@ export class AppComponent implements OnInit{
       if(resp==null) this.loggedIn(false);
       else this.loggedIn(true);
     })
-    //this.session.checkSession();
   }
 
   loggedIn(status:boolean){
@@ -44,7 +44,6 @@ export class AppComponent implements OnInit{
   }
 
   async logout(){
-    await this.session.checkSession();
     if(this.logged){
       fetch(this.baseUrl+"/auth/logout",{credentials:'include'})
         .then(response=>response).then(data=>{

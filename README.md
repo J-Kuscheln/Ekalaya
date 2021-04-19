@@ -21,13 +21,12 @@ Currently running features:
 
 
 In progress:
+- Update task page
 - Edit Project
   - task update
 - Project details
-  - Details Page
-  - Member can only read the description
   - Member can update their tasks
-  - Leader Automatically to Edit Page
+
 
 Should be added:
 - "Take Leadership" from project with no leader

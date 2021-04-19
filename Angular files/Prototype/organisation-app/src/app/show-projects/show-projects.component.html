@@ -43,7 +43,7 @@
         <div class="card" *ngFor="let project of projectsHere" style="width: 18rem; margin:2%;">
             <div class="card-body d-flex flex-column">
                 <!--profile information field-->
-                <div class="row text-center"><h3>{{project.name}}</h3></div>
+                <div class="row text-center"><h3><a class="text-dark" id="project-name-link" routerLink="/project-details/{{project.id}}" >{{project.name}}</a></h3></div>
                 <hr>
                 <div class="row" >
                     <p><b>Status:<br>{{project.status}}</b></p>

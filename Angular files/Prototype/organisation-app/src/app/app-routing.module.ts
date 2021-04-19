@@ -1,3 +1,4 @@
+import { ProjectDetailsComponent } from './project-details/project-details.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { EditProjectComponent } from './edit-project/edit-project.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
@@ -19,7 +20,11 @@ const routes: Routes = [
   {path: 'edit-project', 
       children: [{path:'**', component: EditProjectComponent}]
   },
+  {path: 'project-details', 
+      children: [{path:'**', component: ProjectDetailsComponent}]
+  },
   {path: '', component:HomePageComponent}
+
 ];
 
 @NgModule({
