@@ -2,6 +2,7 @@ package com.prototype.organisation.project;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,7 +64,18 @@ public class ProjectController {
 	
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<HttpStatus> createProject(@RequestBody Project project) {
+	public ResponseEntity<HttpStatus> createProject(@RequestBody Project project, HttpServletRequest request) {
+		String memberId = request.getSession().getAttribute("USER_ID").toString();
+		
+		if(memberId.equals("")) return new ResponseEntity<HttpStatus>(HttpStatus.UNAUTHORIZED);
+		
+		
+		try {
+			project.addProjectLeader(memberService.getMember(UUID.fromString(memberId)));
+		}catch(Exception e) {
+			return new ResponseEntity<HttpStatus>(HttpStatus.EXPECTATION_FAILED);
+		}
+		
 		return new ResponseEntity<HttpStatus>(service.createProject(project));
 	}
 	
