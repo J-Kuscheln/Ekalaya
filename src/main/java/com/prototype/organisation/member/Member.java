@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.prototype.organisation.CustomProjectsSerializer;
+import com.prototype.organisation.CustomTasksSerializer;
 import com.prototype.organisation.project.Project;
 import com.prototype.organisation.task.Task;
 
@@ -60,6 +61,7 @@ public class Member{
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Collection<Project> finishedProjects = new ArrayList<>();
 	
+	@JsonSerialize(using = CustomTasksSerializer.class)
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "members")
 	private Collection<Task> tasks = new ArrayList<>();
 	
