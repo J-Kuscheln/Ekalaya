@@ -33,7 +33,7 @@ public class Member{
 	@Id 
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
 	@Type(type = "uuid-binary")
     private UUID id;
 	private String firstName;
