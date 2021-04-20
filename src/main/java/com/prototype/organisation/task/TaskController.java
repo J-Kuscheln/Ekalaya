@@ -156,15 +156,6 @@ public class TaskController {
 		return service.updateTask(task);
 	}
 	
-	private boolean isMemberRegistered(Task task, String memberId) {
-		for(Member memberInTask : task.getMembers()) {
-			if(UUID.fromString(memberId)==memberInTask.getId()) {
-				return true;
-			} 
-		}
-		return false;
-	}
-	
 	private boolean isLeader(Task task, String memberId) {
 		Project project = task.getProject();
 		for(Member leader: project.getProjectLeaders()) {
