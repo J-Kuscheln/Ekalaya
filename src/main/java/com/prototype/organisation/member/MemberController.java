@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -42,16 +41,13 @@ public class MemberController {
 	//get all members
 	@GetMapping
 	public List<Member> getMembers() {
-		List<Member> members = new ArrayList<>();
-		for(Member member:service.getMembers()) {
-			member.getLeadedProjects().size();
-			member.getMemberProjects().size();
-			member.getFinishedProjects().size();
-			member.getTasks().size();
-			
-			members.add(member);
+		try {
+			return service.getMembers();
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
 		}
-		return members;
+		
 	}
 	
 	//get particular member by id

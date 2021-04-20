@@ -3,8 +3,6 @@ package com.prototype.organisation.member;
 import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 
 public interface MemberRepo extends CrudRepository<Member, UUID> {
