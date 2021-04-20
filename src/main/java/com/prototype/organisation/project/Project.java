@@ -51,19 +51,19 @@ public class Project {
 	
 	@JsonSerialize(using = CustomMembersSerializer.class)
 	@ManyToMany
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	private Collection<Member> projectLeaders = new ArrayList<>();
 	
 	@JsonSerialize(using = CustomMembersSerializer.class)
 	@ManyToMany
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	private Collection<Member> projectMembers = new ArrayList<>();
 	@Embedded
 	private Collection<Milestone> milestones = new ArrayList<>();
 	
 	@JsonSerialize(using = CustomTasksSerializer.class)
 	@OneToMany(mappedBy = "project")
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	private Collection<Task> tasks = new ArrayList<>();
 	
 	public Project() {

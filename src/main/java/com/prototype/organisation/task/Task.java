@@ -47,7 +47,7 @@ public class Task {
 	private Project project; 
 	@JsonSerialize(using = CustomMembersSerializer.class)
 	@ManyToMany
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	private Collection<Member> members = new ArrayList<>();
 	
 	

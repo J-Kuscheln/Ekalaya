@@ -57,22 +57,22 @@ public class Member{
 
 	@JsonSerialize(using = CustomProjectsSerializer.class)
 	@ManyToMany(mappedBy = "projectLeaders")
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	private Collection<Project> leadedProjects = new ArrayList<>(); 
 	
 	@JsonSerialize(using = CustomProjectsSerializer.class)
 	@ManyToMany(mappedBy = "projectMembers")
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	private Collection<Project> memberProjects = new ArrayList<>();
 	
 	@JsonSerialize(using = CustomProjectsSerializer.class)
 	@ManyToMany
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	private Collection<Project> finishedProjects = new ArrayList<>();
 	
 	@JsonSerialize(using = CustomTasksSerializer.class)
 	@ManyToMany(mappedBy = "members")
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	private Collection<Task> tasks = new ArrayList<>();
 	
 	public Member() {
