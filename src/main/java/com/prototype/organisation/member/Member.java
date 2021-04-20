@@ -15,6 +15,8 @@ import javax.persistence.ManyToMany;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -54,19 +56,23 @@ public class Member{
 	private Date modifiedDate = new Date();
 
 	@JsonSerialize(using = CustomProjectsSerializer.class)
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "projectLeaders")
+	@ManyToMany(mappedBy = "projectLeaders")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<Project> leadedProjects = new ArrayList<>(); 
 	
 	@JsonSerialize(using = CustomProjectsSerializer.class)
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "projectMembers")
+	@ManyToMany(mappedBy = "projectMembers")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<Project> memberProjects = new ArrayList<>();
 	
 	@JsonSerialize(using = CustomProjectsSerializer.class)
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<Project> finishedProjects = new ArrayList<>();
 	
 	@JsonSerialize(using = CustomTasksSerializer.class)
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "members")
+	@ManyToMany(mappedBy = "members")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<Task> tasks = new ArrayList<>();
 	
 	public Member() {

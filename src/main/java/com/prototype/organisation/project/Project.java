@@ -15,6 +15,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -48,17 +50,20 @@ public class Project {
 	private Date modifiedDate = new Date();
 	
 	@JsonSerialize(using = CustomMembersSerializer.class)
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<Member> projectLeaders = new ArrayList<>();
 	
 	@JsonSerialize(using = CustomMembersSerializer.class)
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<Member> projectMembers = new ArrayList<>();
 	@Embedded
 	private Collection<Milestone> milestones = new ArrayList<>();
 	
 	@JsonSerialize(using = CustomTasksSerializer.class)
-	@OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "project")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<Task> tasks = new ArrayList<>();
 	
 	public Project() {
