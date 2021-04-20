@@ -1,6 +1,5 @@
 package com.prototype.organisation.project;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
