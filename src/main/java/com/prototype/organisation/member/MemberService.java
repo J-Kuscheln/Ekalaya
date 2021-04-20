@@ -18,12 +18,7 @@ public class MemberService {
 	public List<Member> getMembers() {
 		List<Member> members = new ArrayList<>();
 		memberRepo.findAll().forEach(members::add);
-		members.forEach(m->{
-			Hibernate.initialize(m.getLeadedProjects());
-			Hibernate.initialize(m.getMemberProjects());
-			Hibernate.initialize(m.getFinishedProjects());
-			Hibernate.initialize(m.getTasks());
-		});
+		initializeAllLazyCollection(members);
 		return members;
 	}
 	
@@ -56,5 +51,14 @@ public class MemberService {
 
 	public Member getMemberByEmail(String email) {
 		return memberRepo.findByEmail(email);
+	}
+	
+	private void initializeAllLazyCollection(List<Member> members) {
+		members.stream().forEach(member->{
+			member.getLeadedProjects().size();
+			member.getMemberProjects().size();
+			member.getFinishedProjects().size();
+			member.getTasks().size();
+		});
 	}
 }

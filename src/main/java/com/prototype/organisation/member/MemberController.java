@@ -52,10 +52,6 @@ public class MemberController {
 		try {
 			UUID uuid = UUID.fromString(id);
 			Member member = service.getMember(uuid);
-			Hibernate.initialize(member.getLeadedProjects());
-			Hibernate.initialize(member.getMemberProjects());
-			Hibernate.initialize(member.getFinishedProjects());
-			Hibernate.initialize(member.getTasks());
 			
 			return member;
 		} catch (Exception e) {
