@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -51,6 +52,10 @@ public class MemberController {
 		try {
 			UUID uuid = UUID.fromString(id);
 			Member member = service.getMember(uuid);
+			Hibernate.initialize(member.getLeadedProjects());
+			Hibernate.initialize(member.getMemberProjects());
+			Hibernate.initialize(member.getFinishedProjects());
+			
 			
 			return member;
 		} catch (Exception e) {

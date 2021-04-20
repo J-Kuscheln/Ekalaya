@@ -10,4 +10,5 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ProjectRepo extends CrudRepository<Project,Long> {
 	public Project findByName(String name);
 	public Collection<Project> findAllByStatus(String status);
+	
 }
