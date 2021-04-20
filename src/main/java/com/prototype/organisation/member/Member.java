@@ -54,23 +54,19 @@ public class Member{
 	private Date modifiedDate = new Date();
 
 	@JsonSerialize(using = CustomProjectsSerializer.class)
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "projectLeaders")
-	@Fetch(value=FetchMode.SELECT)
+	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "projectLeaders")
 	private Collection<Project> leadedProjects = new ArrayList<>(); 
 	
 	@JsonSerialize(using = CustomProjectsSerializer.class)
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "projectMembers")
-	@Fetch(value=FetchMode.SELECT)
+	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "projectMembers")
 	private Collection<Project> memberProjects = new ArrayList<>();
 	
 	@JsonSerialize(using = CustomProjectsSerializer.class)
-	@ManyToMany(fetch = FetchType.LAZY)
-	@Fetch(value=FetchMode.SELECT)
+	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<Project> finishedProjects = new ArrayList<>();
 	
 	@JsonSerialize(using = CustomTasksSerializer.class)
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "members")
-	@Fetch(value=FetchMode.SELECT)
+	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "members")
 	private Collection<Task> tasks = new ArrayList<>();
 	
 	public Member() {

@@ -48,17 +48,17 @@ public class Project {
 	private Date modifiedDate = new Date();
 	
 	@JsonSerialize(using = CustomMembersSerializer.class)
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<Member> projectLeaders = new ArrayList<>();
 	
 	@JsonSerialize(using = CustomMembersSerializer.class)
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<Member> projectMembers = new ArrayList<>();
 	@Embedded
 	private Collection<Milestone> milestones = new ArrayList<>();
 	
 	@JsonSerialize(using = CustomTasksSerializer.class)
-	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
 	private Collection<Task> tasks = new ArrayList<>();
 	
 	public Project() {
