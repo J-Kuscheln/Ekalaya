@@ -47,6 +47,7 @@ public class MemberController {
 	//get particular member by id
 	@GetMapping("/{id}")
 	public Member getMember(@PathVariable String id) {
+		System.out.println("get member with id: " + id);
 		try {
 			UUID uuid = UUID.fromString(id);
 			Member member = service.getMember(uuid);

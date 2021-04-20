@@ -32,7 +32,7 @@ public class Task {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String name;
-	@Lob
+	
 	@Column(length=3000)
 	private String description;
 	private String status;
