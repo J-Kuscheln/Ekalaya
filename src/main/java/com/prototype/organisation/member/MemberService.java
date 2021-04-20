@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,12 @@ public class MemberService {
 	public List<Member> getMembers() {
 		List<Member> members = new ArrayList<>();
 		memberRepo.findAll().forEach(members::add);
-//		members.forEach(m->{
-//			m.getLeadedProjects().forEach(l->{
-//				l.setProjectLeader(null);
-//				l.setProjectMember(null);
-//			});
-//		});
+		members.forEach(m->{
+			Hibernate.initialize(m.getLeadedProjects());
+			Hibernate.initialize(m.getMemberProjects());
+			Hibernate.initialize(m.getFinishedProjects());
+			Hibernate.initialize(m.getTasks());
+		});
 		return members;
 	}
 	

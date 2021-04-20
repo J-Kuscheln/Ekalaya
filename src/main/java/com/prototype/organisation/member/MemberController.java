@@ -55,7 +55,7 @@ public class MemberController {
 			Hibernate.initialize(member.getLeadedProjects());
 			Hibernate.initialize(member.getMemberProjects());
 			Hibernate.initialize(member.getFinishedProjects());
-			
+			Hibernate.initialize(member.getTasks());
 			
 			return member;
 		} catch (Exception e) {
