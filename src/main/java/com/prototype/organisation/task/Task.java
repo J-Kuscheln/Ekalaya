@@ -27,13 +27,14 @@ import com.prototype.organisation.member.Member;
 import com.prototype.organisation.project.Project;
 
 @Entity
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Task {
 	@Id
 	@Column(nullable = false, unique = true, updatable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String name;
+	@Lob
 	@Column(length=3000)
 	private String description;
 	private String status;

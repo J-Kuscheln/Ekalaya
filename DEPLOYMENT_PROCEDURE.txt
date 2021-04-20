@@ -1,0 +1,18 @@
+-------------------HOW TO DEPLOY--------------------
+
+1. push to github main branch
+    commands:
+        git add .
+        git commit -m "title/comment"
+        git push main
+2. monitor server logs and wait until server totaly up
+    command:
+        heroku logs -t
+3. change spring.datasource.hikari.auto-commit property to false:
+    command:
+        heroku config:set SPRING_DATASOURCE_HIKARI_AUTO-COMMIT=false
+    reason:
+    	if spring.datasource.hikari.auto-commit in spring property file
+    	directly has "false" value, spring-session-jdbc schema will not be initialized.
+    	but if it's not set to be "false", there would be problem with object relation
+    	in postgresql
