@@ -42,7 +42,16 @@ public class MemberController {
 	//get all members
 	@GetMapping
 	public List<Member> getMembers() {
-		return initializeAllLazyCollection(service.getMembers());
+		List<Member> members = new ArrayList<>();
+		for(Member member:service.getMembers()) {
+			member.getLeadedProjects().size();
+			member.getMemberProjects().size();
+			member.getFinishedProjects().size();
+			member.getTasks().size();
+			
+			members.add(member);
+		}
+		return members;
 	}
 	
 	//get particular member by id
@@ -189,15 +198,5 @@ public class MemberController {
 			e.printStackTrace();
 			return null;
 		}
-	}
-	
-	private List<Member> initializeAllLazyCollection(List<Member> members) {
-		members.stream().forEach(member->{
-			member.getLeadedProjects().size();
-			member.getMemberProjects().size();
-			member.getFinishedProjects().size();
-			member.getTasks().size();
-		});
-		return members;
 	}
 }
