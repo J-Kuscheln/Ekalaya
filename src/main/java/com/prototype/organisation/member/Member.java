@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
@@ -53,18 +55,22 @@ public class Member{
 
 	@JsonSerialize(using = CustomProjectsSerializer.class)
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "projectLeaders")
+	@Fetch(value=FetchMode.SELECT)
 	private Collection<Project> leadedProjects = new ArrayList<>(); 
 	
 	@JsonSerialize(using = CustomProjectsSerializer.class)
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "projectMembers")
+	@Fetch(value=FetchMode.SELECT)
 	private Collection<Project> memberProjects = new ArrayList<>();
 	
 	@JsonSerialize(using = CustomProjectsSerializer.class)
 	@ManyToMany(fetch = FetchType.LAZY)
+	@Fetch(value=FetchMode.SELECT)
 	private Collection<Project> finishedProjects = new ArrayList<>();
 	
 	@JsonSerialize(using = CustomTasksSerializer.class)
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "members")
+	@Fetch(value=FetchMode.SELECT)
 	private Collection<Task> tasks = new ArrayList<>();
 	
 	public Member() {
