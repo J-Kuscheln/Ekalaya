@@ -18,7 +18,6 @@ public class MemberService {
 	public List<Member> getMembers() {
 		List<Member> members = new ArrayList<>();
 		memberRepo.findAll().forEach(members::add);
-		initializeAllLazyCollection(members);
 		return members;
 	}
 	
@@ -51,14 +50,5 @@ public class MemberService {
 
 	public Member getMemberByEmail(String email) {
 		return memberRepo.findByEmail(email);
-	}
-	
-	private void initializeAllLazyCollection(List<Member> members) {
-		members.stream().forEach(member->{
-			member.getLeadedProjects().size();
-			member.getMemberProjects().size();
-			member.getFinishedProjects().size();
-			member.getTasks().size();
-		});
 	}
 }
