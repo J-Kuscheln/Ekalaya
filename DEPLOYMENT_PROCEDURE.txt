@@ -1,5 +1,7 @@
 -------------------HOW TO DEPLOY--------------------
 
+
+-----------------FOR FRESH EMPTY DATABASE-------------
 1. push to github main branch
     commands:
         git add .
@@ -16,3 +18,8 @@
     	directly has "false" value, spring-session-jdbc schema will not be initialized.
     	but if it's not set to be "false", there would be problem with object relation
     	in postgresql
+    	
+    	
+-------------FOR UPDATE WEBSITE WITHOUT RESET DATABASE-------------
+
+you can directly push to github main branch without set anything else.
